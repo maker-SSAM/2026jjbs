@@ -1,0 +1,526 @@
+/* 모든 파라메트릭 디자인 편집 페이지가 공유하는 레이아웃/스타일.
+   편집 화면 뼈대(컨트롤 패널 크기, 뷰어 구성)를 모든 디자인에서 동일하게 유지하기 위한 공통 CSS. */
+
+/* 다크모드: <html data-theme="dark">일 때 아래 값들로 덮어쓴다. data-theme 속성은
+   assets/js/theme-core.js가 첫 페인트 전에(인라인 스크립트로) 설정해서 깜빡임을 막는다. */
+:root {
+    --panel-bg: #f8f9fa;
+    --panel-accent-bg: #eef0f2;
+    --panel-border: #e0e0e0;
+    --text-color: #333;
+    --text-muted: #666;
+    --home-link-color: #1976d2;
+    --home-link-bg: #e3f2fd;
+    --home-link-border: #bbdefb;
+    --home-link-hover-bg: #bbdefb;
+    --reset-btn-color: #616161;
+    --reset-btn-bg: #eceff1;
+    --reset-btn-border: #cfd8dc;
+    --reset-btn-hover-bg: #cfd8dc;
+    --resizer-bg: #e0e0e0;
+    --resizer-after-border: #9e9e9e;
+    --viewer-bg: #eee;
+    --viewcube-bg: rgba(255, 255, 255, 0.85);
+    --cube-btn-bg: #ffffff;
+    --cube-btn-border: #ccc;
+    --cube-btn-color: #333;
+    --input-bg: #ffffff;
+    --input-border: #ccc;
+    --scene-bg: #e0e0e0; /* three.js 뷰어 배경(scene.background) — core.js initViewer가 읽어감 */
+    /* 다크모드 토글 버튼 색: 지금이 아니라 눌렀을 때 바뀔 화면(반대 테마)을 미리 보여준다
+       (라이트모드에선 어두운 배색, 다크모드에선 밝은 배색) — 그래서 아래는 dark 배색의 반전. */
+    --theme-toggle-bg: #2a2c30;
+    --theme-toggle-border: #4a4d52;
+    --theme-toggle-color: #ddd;
+}
+:root[data-theme="dark"] {
+    --panel-bg: #1e1f22;
+    --panel-accent-bg: #26282c;
+    --panel-border: #3a3c40;
+    --text-color: #e4e4e4;
+    --text-muted: #adadad;
+    --home-link-color: #64b5f6;
+    --home-link-bg: #1c3550;
+    --home-link-border: #2b4d6e;
+    --home-link-hover-bg: #2c5175;
+    --reset-btn-color: #c7c7c7;
+    --reset-btn-bg: #33363b;
+    --reset-btn-border: #4a4d52;
+    --reset-btn-hover-bg: #45484d;
+    --resizer-bg: #3a3c40;
+    --resizer-after-border: #6b6e73;
+    --viewer-bg: #202124;
+    --viewcube-bg: rgba(35, 36, 40, 0.85);
+    --cube-btn-bg: #2a2c30;
+    --cube-btn-border: #4a4d52;
+    --cube-btn-color: #ddd;
+    --input-bg: #2a2c30;
+    --input-border: #4a4d52;
+    --scene-bg: #2b2c30;
+    --theme-toggle-bg: #ffffff;
+    --theme-toggle-border: #ccc;
+    --theme-toggle-color: #333;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    font-family: sans-serif;
+    display: flex;
+    user-select: none;
+    /* color는 상속되는 속성이라 여기 한 번만 지정해두면 각 갤러리가 controlsBodyEl.innerHTML로
+       만드는 <h3>/<span> 등 색을 따로 안 지정한 글자도 전부 테마에 맞게 바뀐다. 지금까지는
+       이 지정이 없어서 브라우저 기본값(검정)이 그대로 나왔다 — "보석 설정" 같은 <h3> 제목이
+       다크모드에서도 검게 보이던 원인. */
+    color: var(--text-color);
+}
+
+/* header(홈 버튼)/body(스크롤 영역)/footer(다운로드 등 액션 버튼) 3단 세로 flex.
+   body만 스크롤되고 header/footer는 내용이 아무리 길어져도 화면에 항상 고정으로 보인다. */
+#controls {
+    width: 320px;
+    min-width: 280px;
+    max-width: 500px;
+    flex-shrink: 0;
+    height: 100%;
+    background: var(--panel-bg);
+    box-sizing: border-box;
+    z-index: 10;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.05);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* .controls-topbar는 header/footer를 감싸는 래퍼다(모바일에서 한 줄로 합치기 위한 것,
+   assets/js/core.js 주석 참고). 데스크톱에서는 박스를 만들지 않아(display:contents) 있으나
+   마나고, 대신 header(1)/body(2)/footer(3) 순서를 명시적인 order로 고정해서 래퍼의 DOM
+   위치와 무관하게 항상 "위-가운데-아래" 순서가 나오게 한다. */
+.controls-topbar { display: contents; }
+.controls-header { order: 1; }
+.controls-body { order: 2; }
+.controls-footer { order: 3; }
+
+/* header/footer는 배경을 body(--panel-bg)보다 살짝 진하게 줘서 "이 부분은 고정돼 있다"는
+   걸 시각적으로 구분한다. */
+.controls-header {
+    flex-shrink: 0;
+    padding: 25px 25px 20px;
+    box-sizing: border-box;
+    background: var(--panel-accent-bg);
+    border-bottom: 1px solid var(--panel-border);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* 홈 버튼이 더 넓게, 초기화 버튼은 내용 크기만큼만 — 둘 다 같은 높이/모양 문법을 쓰되
+   초기화 쪽은 색을 중성 회색으로 낮춰서 "덜 중요한 보조 동작"임을 구분한다. */
+.home-link, .reset-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 8px 14px;
+    font-size: 0.85rem;
+    font-weight: bold;
+    border-radius: 6px;
+    transition: background 0.15s, box-shadow 0.15s;
+}
+.home-link {
+    flex: 1;
+    color: var(--home-link-color);
+    background: var(--home-link-bg);
+    border: 1px solid var(--home-link-border);
+    text-decoration: none;
+}
+.home-link:hover {
+    background: var(--home-link-hover-bg);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+.reset-btn {
+    flex-shrink: 0;
+    color: var(--reset-btn-color);
+    background: var(--reset-btn-bg);
+    border: 1px solid var(--reset-btn-border);
+    cursor: pointer;
+}
+.reset-btn:hover {
+    background: var(--reset-btn-hover-bg);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+.controls-body {
+    flex: 1;
+    min-height: 0; /* flex 자식이 내용 크기만큼 늘어나 스크롤이 안 먹는 문제 방지 */
+    overflow-y: auto;
+    padding: 20px 25px;
+    box-sizing: border-box;
+}
+
+.controls-footer {
+    flex-shrink: 0;
+    padding: 15px 25px 25px;
+    box-sizing: border-box;
+    background: var(--panel-accent-bg);
+    border-top: 1px solid var(--panel-border);
+}
+.controls-footer:empty {
+    padding: 0; border-top: none; background: transparent; /* 액션 버튼이 없는 페이지(준비 중 자리 등)에서는 빈 여백/선을 안 남긴다 */
+}
+
+#resizer {
+    width: 8px;
+    height: 100%;
+    background: var(--resizer-bg);
+    cursor: col-resize;
+    z-index: 20;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.1s, width 0.1s, box-shadow 0.1s;
+}
+#resizer:hover {
+    width: 12px;
+    background: #2196f3;
+    box-shadow: 0 0 8px rgba(33, 150, 243, 0.5);
+}
+#resizer.active {
+    width: 12px;
+    background: #1976d2;
+    box-shadow: 0 0 12px rgba(25, 118, 210, 0.8);
+}
+#resizer::after {
+    content: "";
+    width: 4px;
+    height: 24px;
+    border-left: 2px dotted var(--resizer-after-border);
+    border-right: 2px dotted var(--resizer-after-border);
+    opacity: 0.8;
+    transition: border-color 0.1s;
+}
+#resizer:hover::after, #resizer.active::after {
+    border-color: #ffffff;
+}
+
+#viewer {
+    flex: 1;
+    /* flex item의 min-width 기본값은 auto라서, 안의 <canvas>가 이전 렌더링 크기를
+       "내용물 최소 크기"로 고집해 컨트롤 패널을 넓혀도 줄어들지 못하고 화면 밖으로
+       밀려나는 문제가 있었다(실제로 겪음). 0으로 명시해 내용물 크기와 무관하게 줄어들게 한다. */
+    min-width: 0;
+    height: 100%;
+    background: var(--viewer-bg);
+    position: relative;
+}
+
+#viewcube-container {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 30;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    width: 160px; /* 영문 모드 "Hide dimensions" 등 긴 라벨이 버튼 폭보다 넘치는 것 방지 */
+    box-sizing: border-box;
+    background: var(--viewcube-bg);
+    padding: 8px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    backdrop-filter: blur(4px);
+}
+
+/* 시점/모드 패널을 접었다 펼치는 작은 버튼 — 데스크톱에서는 패널이 항상 펼쳐져 있으므로
+   숨긴다(480px 이하 모바일 미디어 쿼리에서만 보이게 함). */
+#viewcube-toggle {
+    display: none;
+}
+.viewcube-title {
+    font-size: 0.75rem;
+    text-align: center;
+    font-weight: bold;
+    color: var(--text-muted);
+    margin-bottom: 2px;
+}
+.viewcube-divider {
+    border-top: 1px solid var(--panel-border);
+    margin: 2px 0;
+}
+.cube-btn {
+    background: var(--cube-btn-bg);
+    border: 1px solid var(--cube-btn-border);
+    border-radius: 4px;
+    padding: 6px 12px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: var(--cube-btn-color);
+    cursor: pointer;
+    transition: all 0.1s;
+    text-align: center;
+    white-space: nowrap;
+    text-decoration: none; /* 링크(<a>)로 만든 cube-btn(원작디자인 등)에 기본 밑줄이 붙는 것 방지 */
+}
+.cube-btn:hover {
+    background: #2196f3;
+    color: #fff;
+    border-color: #2196f3;
+}
+
+/* 라이선스 배지(CC BY/BY-SA, MakerWorld 표준 라이선스) — 원본 이미지 비율은 서로 다르지만,
+   다른 cube-btn과 똑같은 둥근 테두리 상자 안에 꽉 채워 넣어 버튼 크기/모양의 일관성을
+   유지한다. padding을 0으로 비우고 overflow:hidden으로 border-radius 밖을 잘라내며, 이미지는
+   width/height 100%로 상자에 맞춰 늘이거나 줄인다(가로세로 비율이 살짝 달라져도 무방하다는
+   전제).*/
+.license-btn,
+.cube-btn.license-badge {
+    padding: 0;
+    overflow: hidden;
+    height: 33px; /* 다른 cube-btn(예: "윗면(평면도)")의 실측 렌더 높이와 맞춘 값 */
+}
+/* 배지 이미지는 원래 가로세로 비율을 지킨 채 버튼 안에 들어가게 한다(contain) — fill로 늘리면
+   PNG 배지(표준 디지털 파일 라이선스)와 viewBox 없는 SVG가 버튼 비율대로 늘어나 보였다. */
+.license-btn img,
+.license-badge img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+/* 클릭되는 링크가 아닌 안내용 배지(예: 전용 라이선스 페이지가 없는 경우) — 다른 버튼과
+   똑같이 보이면 눌러보고 싶게 만들므로, 커서/hover 반응만 없앤다(모양 자체는 동일하게 유지). */
+.cube-btn.license-badge {
+    cursor: default;
+}
+.cube-btn.license-badge:hover {
+    background: var(--cube-btn-bg);
+    border-color: var(--cube-btn-border);
+}
+
+/* 다크모드 토글 — "모드 변경" 구간(assets/js/core.js의 mountEditorShell()이 viewcube-title +
+   구분선까지 만들어둔 자리)에 들어간다. 버튼 자체는 theme-core.js의 createToggleButton()이
+   만든다. 크기/여백은 .cube-btn과 동일하게 맞추되(사용자 요청), 색만 지금 테마가 아니라
+   눌렀을 때 바뀔 반대 테마를 미리 보여주도록 --theme-toggle-* 변수를 쓴다. */
+.theme-toggle-btn {
+    background: var(--theme-toggle-bg);
+    border: 1px solid var(--theme-toggle-border);
+    border-radius: 4px;
+    padding: 6px 12px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: var(--theme-toggle-color);
+    cursor: pointer;
+    text-align: center;
+    white-space: nowrap;
+}
+
+/* 영어 전환 토글 — 다크모드 토글 바로 옆(같은 "모드 변경" 구간)에 들어간다. 언어는
+   다크모드처럼 "반대쪽을 미리 보여주는" 색 트릭이 필요 없어서, 평범한 .cube-btn과
+   같은 중립 색을 쓴다. */
+.lang-toggle-btn {
+    background: var(--cube-btn-bg);
+    border: 1px solid var(--cube-btn-border);
+    border-radius: 4px;
+    padding: 6px 12px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: var(--cube-btn-color);
+    cursor: pointer;
+    text-align: center;
+    white-space: nowrap;
+}
+.lang-toggle-btn:hover {
+    background: #2196f3;
+    color: #fff;
+    border-color: #2196f3;
+}
+
+.control-group { margin-bottom: 20px; }
+label { display: block; margin-bottom: 8px; font-weight: bold; font-size: 0.95rem; color: var(--text-color); }
+input[type="range"], input[type="text"], select {
+    width: 100%; padding: 6px; box-sizing: border-box;
+    background: var(--input-bg); color: var(--text-color); border: 1px solid var(--input-border);
+}
+
+/* core.js의 enhanceRangeInputs()가 모든 <input type="range"> 슬라이더에 자동으로 씌우는
+   "−/슬라이더/+" 한 줄 구성. 갤러리마다 슬라이더 마크업을 손으로 고칠 필요 없이, 공용
+   함수 하나가 만들어 붙인다(아래 .range-value-editable/.range-value-input은 슬라이더 값을
+   보여주는 <span id="valX">를 클릭해서 숫자를 직접 입력할 때 쓰는 스타일). */
+.range-row { display: flex; align-items: center; gap: 6px; }
+.range-row input[type="range"] { flex: 1; width: auto; }
+.range-step-btn {
+    flex-shrink: 0; width: 26px; height: 26px; padding: 0;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 4px; border: 1px solid var(--input-border);
+    background: var(--input-bg); color: var(--text-color);
+    font-size: 1rem; line-height: 1; cursor: pointer;
+}
+.range-step-btn:hover { background: #2196f3; color: #fff; border-color: #2196f3; }
+.range-step-btn:active { transform: scale(0.9); }
+
+.range-value-editable {
+    cursor: text;
+    border-bottom: 1px dashed var(--home-link-color);
+    padding: 0 1px;
+}
+.range-value-input {
+    width: 4.5em; box-sizing: border-box; font: inherit;
+    padding: 0 2px; border: 1px solid var(--home-link-color); border-radius: 3px;
+    background: var(--input-bg); color: var(--text-color);
+}
+.download-btn {
+    width: 100%; padding: 14px; background-color: #4caf50; color: white;
+    border: none; border-radius: 6px; font-size: 16px; font-weight: bold;
+    cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+.download-btn:hover { background-color: #45a049; }
+
+/* core.js의 mountDownloadPanel()이 만드는 "STL/3MF 선택 카드 + 다운로드 버튼 하나" 구성.
+   카드로 먼저 파일 형식을 고르고, 아래 다운로드 버튼 하나가 그 형식으로 내보낸다. */
+.format-picker { display: flex; gap: 8px; margin-bottom: 10px; }
+.format-option {
+    flex: 1; box-sizing: border-box; padding: 10px 6px; text-align: center;
+    border: 1.5px solid var(--input-border); border-radius: 8px;
+    background: var(--input-bg); cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+}
+.format-option .format-name { font-weight: bold; font-size: 1rem; color: var(--text-color); }
+.format-option .format-desc { font-size: 0.72rem; color: var(--text-muted); margin-top: 2px; }
+
+/* ---------- 모바일 세로 화면(폰) 레이아웃 ----------
+   기본(데스크톱) 레이아웃은 #controls(사이드바)+#resizer(드래그 손잡이)+#viewer가 가로로
+   나란히 배치되는 구조라, 폰 폭에서는 사이드바가 화면 대부분을 차지해버린다. 480px 이하에서는
+   3단 세로 구조로 바꾼다: ① 메인화면/초기화/STL·3MF/다운로드(원래 #controls의 header+footer)를
+   한 줄로 압축해 화면 맨 위에 고정, ② 3D 뷰어를 그 아래 고정 높이로, ③ 슬라이더 조절부(원래
+   #controls의 body)만 나머지 공간에서 스크롤되게 한다 — 손 그림 요청 그대로 "위쪽 고정 한 줄 +
+   뷰어 고정 + 아래쪽만 스크롤".
+   #controls는 원래 header/body/footer를 감싸는 하나의 박스인데, header+footer(정확히는 그
+   래퍼 .controls-topbar)는 맨 위로, body는 맨 아래로 흩어놔야 해서 #controls 자체를
+   display:contents로 박스를 없애고(padding/width 등은 무시됨) 그 자식들을 body 플렉스
+   컨테이너의 직속 아이템으로 만들어 각각 order를 지정한다.
+   #controls가 박스를 잃으면서 원래 #controls에 있던 배경색(--panel-bg)도 같이 사라지기
+   때문에(display:contents는 배경/테두리/패딩을 전부 무시한다), 슬라이더 영역이 다크모드에서도
+   흰 배경으로 보이는 문제가 있었다 — .controls-body에 배경을 다시 지정해서 고쳤다.
+   이 파일은 모든 갤러리가 공유하므로 이 규칙도 core.css를 쓰는 모든 편집 화면에 자동
+   적용된다. */
+@media (max-width: 480px) {
+    html, body {
+        flex-direction: column;
+        height: 100%;
+        overflow: hidden;
+        background: var(--panel-bg);
+    }
+    #controls {
+        display: contents;
+    }
+
+    /* 위쪽 고정 바 — header(홈/초기화)와 footer(STL·3MF/다운로드)를 한 줄로 압축한다.
+       header/footer/format-picker를 각각 display:contents로 투명하게 만들어서, 그 안의
+       버튼 5개(홈/초기화/STL/3MF/다운로드)가 이 줄 하나의 flex row 아이템으로 나란히
+       붙는다 — 화면이 아주 좁은 기기에서도 안 잘리도록 넘치면 가로 스크롤되게 뒀다. */
+    .controls-topbar {
+        display: flex;
+        flex-direction: row;
+        align-items: stretch;
+        /* 버튼들이 내용 크기만큼만 차지하고 남는 공간은 사이사이로 분배해서, 첫 버튼은
+           왼쪽 끝에 마지막 버튼은 오른쪽 끝에 딱 붙게 한다(사용자 요청: 좌우 꽉 차게). */
+        justify-content: space-between;
+        order: 1;
+        flex-shrink: 0;
+        width: 100%;
+        gap: 6px;
+        /* 좌우 패딩을 없애서 버튼 줄이 화면 가장자리까지 꽉 차게 한다(사용자 요청). */
+        padding: 8px 0;
+        box-sizing: border-box;
+        background: var(--panel-accent-bg);
+        border-bottom: 1px solid var(--panel-border);
+        overflow-x: auto;
+    }
+    .controls-header, .controls-footer, .format-picker {
+        display: contents;
+    }
+    .controls-topbar .home-link,
+    .controls-topbar .reset-btn,
+    .controls-topbar .format-option,
+    .controls-topbar .download-btn {
+        flex: 0 0 auto;
+        width: auto; /* download-btn 기본 스타일의 width:100%를 덮어써야 한다 — 안 그러면
+                        flex-basis:auto가 그 width를 그대로 써서 줄 전체를 차지해버린다 */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0;
+        /* 상하 패딩 0→5px: 버튼 높이를 기존(18px)의 약 150%(28px)로 키운다. */
+        padding: 5px 10px;
+        font-size: 0.72rem;
+        border-radius: 6px;
+        white-space: nowrap;
+        box-shadow: none;
+        box-sizing: border-box;
+    }
+    .controls-topbar .format-option .format-name { font-size: inherit; }
+    .controls-topbar .format-option .format-desc { display: none; }
+
+    #viewer {
+        order: 3;
+        flex: none;
+        width: 100%;
+        /* 사용자 요청: 기존 38vh의 150% */
+        height: 57vh;
+    }
+    #resizer {
+        display: none;
+    }
+    .controls-body {
+        order: 4;
+        flex: 1;
+        min-height: 0;
+        width: 100%;
+        overflow-y: auto;
+        box-sizing: border-box;
+        background: var(--panel-bg);
+    }
+    /* 시점/모드 패널: 좁은 화면에서 뷰어를 너무 많이 가리므로 기본은 접어두고,
+       #viewcube-toggle 버튼을 눌러야만(.viewcube-open 클래스) 펼쳐지게 한다. */
+    #viewcube-container {
+        display: none;
+        width: 128px;
+        padding: 6px;
+        gap: 4px;
+    }
+    #viewcube-container.viewcube-open {
+        display: flex;
+    }
+    #viewcube-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        z-index: 31;
+        width: 40px;
+        height: 40px;
+        box-sizing: border-box;
+        border-radius: 50%;
+        border: 1px solid var(--cube-btn-border);
+        background: var(--viewcube-bg);
+        color: var(--cube-btn-color);
+        font-size: 1.1rem;
+        line-height: 1;
+        cursor: pointer;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        backdrop-filter: blur(4px);
+    }
+    .cube-btn, .theme-toggle-btn, .lang-toggle-btn {
+        font-size: 0.72rem;
+        padding: 5px 8px;
+    }
+}
+.format-option.selected { border-color: #2196f3; background: rgba(33, 150, 243, 0.14); }
+.format-option.selected .format-name { color: #1976d2; }

@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <!-- 2026jjbs 사본: easy3D 갤러리5(이름표 열쇠고리)를 가져와 레이저커터용으로 고침 — 층을 쌓는 대신(돌출 빼고) 자르기·새기기 선을 DXF로 내보낸다. -->
+    <!-- 모바일에서 실제 기기 폭 기준으로 레이아웃을 잡게 한다(index.html과 동일한 이유). -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 다크모드 첫 페인트 전 적용(깜빡임 방지) — assets/js/theme-core.js의 로직과 동일하되,
+         외부 파일 로딩을 기다리지 않도록 일부러 인라인으로 중복해뒀다. -->
+    <!-- 연수용: 같은 주소의 다른 페이지 설정(다크모드·영어)을 따르지 않고 키캡 페이지처럼 밝은 화면 + 한국어로 연다 -->
+    <script>document.documentElement.setAttribute('data-theme','light');document.documentElement.setAttribute('data-lang','ko');</script>
+    <title>레이저 이름표 - 전주교대 부설초등학교 교사연수</title>
+    <link rel="stylesheet" href="../assets/css/core.css">
+    <script src="https://cdn.jsdelivr.net/npm/three@0.146.0/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.146.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.146.0/examples/js/exporters/STLExporter.js"></script>
+    <!-- core.js가 PMREMGenerator로 굽는 가상의 방 환경(IBL 반사광) — 재질에 은은한 반사를 준다 -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.146.0/examples/js/environments/RoomEnvironment.js"></script>
+    <!-- 웹 브라우저에서 TTF 폰트의 벡터 패스를 추출하는 라이브러리 -->
+    <script src="https://cdn.jsdelivr.net/npm/opentype.js@1.3.4/dist/opentype.min.js"></script>
+    <script src="../assets/js/theme-core.js"></script>
+    <script src="../assets/js/lang-core.js"></script>
+    <script src="../assets/js/core.js"></script>
+    <script src="../assets/js/threemf-core.js"></script>
+    <!-- 폰트 → 글자 윤곽선 추출 공용 모듈 -->
+    <script src="../assets/js/font-core.js"></script>
+    <!-- 3D 글자 폰트 목록 (모든 폰트 페이지 공용) -->
+    <script src="../assets/js/font-list.js"></script>
+    <!-- 2D 윤곽선(offset/union) → Manifold-3D 솔리드 → three.js 변환 공용 브릿지. ES 모듈이라
+         로딩이 비동기다 — 그래서 아래 페이지 로직 스크립트도 type="module"로 만들어서
+         ManifoldCore.ready를 안전하게 await할 수 있게 했다. -->
+    <script type="module" src="../assets/js/manifold-core.js"></script>
+    <style>
+        .color-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+        .color-row span { font-size: 0.9em; color: var(--text-color); }
+        .color-row input[type="color"] { width: 44px; height: 30px; padding: 0; border: 1px solid var(--input-border); border-radius: 4px; cursor: pointer; }
+        .check-row { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
+        .check-row label { font-size: 0.95em; }
+        .section-label { font-weight: bold; font-size: 0.95em; margin: 18px 0 10px; padding-top: 12px; border-top: 1px solid var(--panel-border); color: var(--text-color); }
+        .section-label:first-of-type { margin-top: 8px; padding-top: 0; border-top: none; }
+        .emoji-input { width: 100%; box-sizing: border-box; font-size: 1.2em; text-align: center; padding: 6px; }
+    </style>
+</head>
+<body>
+
+    <script type="module">
+        // 갤러리5: 다국어 파라메트릭 키링. 사용자가 준 OpenSCAD 디자인("Global Parametric
+        // Keychain")을 이 프로젝트의 three.js + Manifold-3D 스택으로 포팅했다.
+        //
+        // 원본은 텍스트/이모지 2개를 2D로 배치한 뒤(text_2d/emoji_L_2d/emoji_R_2d),
+        // offset()으로 부풀려 바닥판·외곽선·테두리 링을 만들고, 마지막에 각 층을 서로 다른
+        // 높이로 압출해 색이 켜켜이 쌓인 것처럼 보이게 한다(3D 프린터로 색을 층별로 바꿔
+        // 찍는 걸 염두에 둔 구조). Manifold-3D의 CrossSection.offset()이 OpenSCAD의
+        // offset(r=...)과 정확히 대응되고(둘 다 내부적으로 Clipper 계열 라이브러리 사용),
+        // add()/subtract()가 2D union/difference에 대응돼서 원본 로직을 거의 그대로 옮겼다.
+        //
+        // 원본 대비 바꾼 부분:
+        //   - 글씨체: 임의의 구글 폰트 이름 대신, 갤러리7과 동일한 우리 폰트 10종 목록/순서를 그대로 씀
+        //   - 이모지 폰트: "Noto Emoji"(구글 폰트) 대신 우리가 가진 NotoEmoji-SemiBold.ttf로 고정
+        //     (이모지는 사용자가 고를 필요 없이 항상 이 폰트로 그림)
+        const shell = ParametricCore.mountEditorShell(document.body, null, {
+            sourceUrl: 'https://makerworld.com/ko/models/2640504-parametric-name-tag-keychain-with-korean-input#profileId-2917401',
+            licenseType: 'BY-SA',
+            homeUrl: '../#laser'
+        });
+        const homeLinkEl = document.querySelector('.home-link');
+        if (homeLinkEl) { homeLinkEl.textContent = '← 사용법'; homeLinkEl.removeAttribute('data-i18n-en'); }
+
+        const FONT_OPTIONS = FontList.OPTIONS; // 폰트 목록: assets/js/font-list.js
+        const DEFAULT_FONT_INDEX = FONT_OPTIONS.findIndex(f => f.file === 'Cafe24PROUP.ttf');
+        const EMOJI_FONT_FILE = FontList.EMOJI_FILE;
+
+        const DEFAULTS = {
+            text: '이름표', fontIndex: DEFAULT_FONT_INDEX,
+            fontSize: 12, fontWeight: 0, spacing: 1.0, narrowWiden: 0,
+            emojiL: '', emojiLScale: 1.0, emojiLOffset: 0, emojiLMirror: false,
+            emojiR: '♠', emojiRScale: 0.9, emojiROffset: 4.5, emojiRMirror: false,
+            outlineW: 0.3, borderW: 1.0, innerMargin: 1.5, outerMargin: 1.0,
+            keyringOn: true, keyringX: -21, keyringY: -0.5, keyringHoleSize: 3.5, keyringRim: 1.0,
+            baseThick: 3.0, outlineThick: 0.1, borderThick: 0.1, textThick: 0.1,
+            colBase: '#e8c48c', colOutline: '#e8c48c', colBorder: '#5b3a1e',
+            colText: '#5b3a1e', colEmojiL: '#5b3a1e', colEmojiR: '#5b3a1e'
+        };
+
+        shell.controlsBodyEl.innerHTML = `
+            <h3>레이저 이름표 설정</h3>
+            <p style="font-size: 0.85em; color: var(--text-muted); margin-bottom: 20px;">* 바깥 모양과 구멍은 <b style="color:#d32f2f">자르고(빨강)</b>, 글자·이모지·테두리 띠는 <b>새겨요(검정)</b>. 받은 DXF는 RDWorks에서 <b>파일 → 가져오기</b>로 열어요.</p>
+
+            <div class="section-label" data-i18n-en="1. Text">1. 텍스트</div>
+            <div class="control-group">
+                <label data-i18n-en="Enter text (press Enter or click elsewhere after typing)">텍스트 입력 (입력 후 Enter 또는 다른 곳 클릭)</label>
+                <input type="text" id="inputText" value="이름표" onkeydown="onTextKeydown(event)" onblur="scheduleUpdate()">
+            </div>
+            <div class="control-group">
+                <label data-i18n-en="Choose font">글씨체 선택</label>
+                <select id="fontSelect" onchange="onFontChange()">
+                    ${FONT_OPTIONS.map((f, i) => `<option value="${i}"${i === DEFAULT_FONT_INDEX ? ' selected' : ''}>${f.label}</option>`).join('')}
+                    <option value="__upload__" data-i18n-en="📁 Upload my font file...">📁 내 폰트 파일 업로드...</option>
+                </select>
+                <input type="file" id="fontUpload" accept=".ttf,.otf" style="display:none">
+            </div>
+            <div class="control-group"><label><span data-i18n-en="Font size">글자 크기</span>: <span id="valFontSize">12</span></label><input type="range" id="fontSize" min="5" max="50" step="0.5" value="12" oninput="scheduleUpdate()"></div>
+            <div class="control-group"><label><span data-i18n-en="Font weight">글자 굵기</span>: <span id="valFontWeight">0</span></label><input type="range" id="fontWeight" min="-1" max="2" step="0.1" value="0" oninput="scheduleUpdate()"></div>
+            <div class="control-group"><label><span data-i18n-en="Letter spacing">자간</span>: <span id="valSpacing">1.0</span></label><input type="range" id="spacing" min="0.5" max="2.0" step="0.05" value="1.0" oninput="scheduleUpdate()"></div>
+            <div class="control-group"><label><span data-i18n-en="Letter width (narrow/wide)">글자 폭(좁게/넓게)</span>: <span id="valNarrowWiden">0</span></label><input type="range" id="narrowWiden" min="-50" max="50" step="1" value="0" oninput="scheduleUpdate()"></div>
+
+            <div class="section-label" data-i18n-en="2. Emoji">2. 이모지</div>
+            <div style="display:none">
+                <div class="control-group">
+                    <label data-i18n-en="Left emoji">왼쪽 이모지</label>
+                    <input type="text" id="emojiL" class="emoji-input" value="" oninput="scheduleUpdate()">
+                </div>
+                <div class="control-group"><label><span data-i18n-en="Left emoji size">왼쪽 이모지 크기</span>: <span id="valEmojiLScale">1.0</span></label><input type="range" id="emojiLScale" min="0.2" max="3" step="0.1" value="1.0" oninput="scheduleUpdate()"></div>
+                <div class="control-group"><label><span data-i18n-en="Left emoji spacing">왼쪽 이모지 간격</span>: <span id="valEmojiLOffset">0</span></label><input type="range" id="emojiLOffset" min="-20" max="20" step="0.5" value="0" oninput="scheduleUpdate()"></div>
+                <div class="check-row"><input type="checkbox" id="emojiLMirror" onchange="scheduleUpdate()"><label for="emojiLMirror" data-i18n-en="Mirror left emoji horizontally">왼쪽 이모지 좌우 반전</label></div>
+            </div>
+
+            <div class="control-group">
+                <label data-i18n-en="Emoji">이모지</label>
+                <input type="text" id="emojiR" class="emoji-input" value="♠" oninput="scheduleUpdate()">
+            </div>
+            <p style="font-size: 0.85em; margin: -6px 0 14px;" data-i18n-en-html="🔎 Not sure how to enter an emoji? → Find one you like in the <a href=&quot;https://fonts.google.com/noto/specimen/Noto+Emoji/glyphs&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot; style=&quot;color: var(--home-link-color);&quot;>Noto Emoji list</a> and copy-paste it here.">🔎 이모지를 어떻게 입력하는지 모르겠다면 → <a href="https://fonts.google.com/noto/specimen/Noto+Emoji/glyphs" target="_blank" rel="noopener" style="color: var(--home-link-color);">Noto Emoji 목록</a>에서 원하는 이모지를 찾아 복사·붙여넣기 하세요.</p>
+            <div class="control-group"><label><span data-i18n-en="Emoji size">이모지 크기</span>: <span id="valEmojiRScale">0.9</span></label><input type="range" id="emojiRScale" min="0.2" max="3" step="0.1" value="0.9" oninput="scheduleUpdate()"></div>
+            <div class="control-group"><label><span data-i18n-en="Emoji spacing">이모지 간격</span>: <span id="valEmojiROffset">4.5</span></label><input type="range" id="emojiROffset" min="-20" max="20" step="0.5" value="4.5" oninput="scheduleUpdate()"></div>
+            <div class="check-row"><input type="checkbox" id="emojiRMirror" onchange="scheduleUpdate()"><label for="emojiRMirror" data-i18n-en="Mirror emoji horizontally">이모지 좌우 반전</label></div>
+
+            <div class="section-label" data-i18n-en="3. Design details">3. 디자인 디테일</div>
+            <div class="control-group"><label><span data-i18n-en="Text outline thickness">글자 외곽선 두께</span>: <span id="valOutlineW">0.3</span>mm</label><input type="range" id="outlineW" min="0" max="2" step="0.05" value="0.3" oninput="scheduleUpdate()"></div>
+            <div class="control-group"><label><span data-i18n-en="Border thickness">테두리 두께</span>: <span id="valBorderW">1.0</span>mm</label><input type="range" id="borderW" min="0" max="5" step="0.1" value="1.0" oninput="scheduleUpdate()"></div>
+            <div class="control-group"><label><span data-i18n-en="Text-to-border gap">글자-테두리 간격</span>: <span id="valInnerMargin">1.5</span>mm</label><input type="range" id="innerMargin" min="0" max="5" step="0.1" value="1.5" oninput="scheduleUpdate()"></div>
+            <div class="control-group"><label><span data-i18n-en="Outer margin">바깥 여백</span>: <span id="valOuterMargin">1.0</span>mm</label><input type="range" id="outerMargin" min="0" max="5" step="0.1" value="1.0" oninput="scheduleUpdate()"></div>
+
+            <div class="section-label" data-i18n-en="4. Keyring hole">4. 키링 구멍</div>
+            <div class="check-row"><input type="checkbox" id="keyringOn" checked onchange="scheduleUpdate()"><label for="keyringOn" data-i18n-en="Enable keyring hole">키링 구멍 사용</label></div>
+            <div class="control-group"><label><span data-i18n-en="Hole X position">구멍 X 위치</span>: <span id="valKeyringX">-21</span>mm</label><input type="range" id="keyringX" min="-40" max="40" step="0.5" value="-21" oninput="scheduleUpdate()"></div>
+            <div class="control-group"><label><span data-i18n-en="Hole Y position">구멍 Y 위치</span>: <span id="valKeyringY">-0.5</span>mm</label><input type="range" id="keyringY" min="-40" max="40" step="0.5" value="-0.5" oninput="scheduleUpdate()"></div>
+            <div class="control-group"><label><span data-i18n-en="Hole diameter">구멍 지름</span>: <span id="valKeyringHoleSize">3.5</span>mm</label><input type="range" id="keyringHoleSize" min="2" max="8" step="0.5" value="3.5" oninput="scheduleUpdate()"></div>
+            <div class="control-group"><label><span data-i18n-en="Hole rim thickness">구멍 테두리 두께</span>: <span id="valKeyringRim">1.0</span>mm</label><input type="range" id="keyringRim" min="0.5" max="3" step="0.1" value="1.0" oninput="scheduleUpdate()"></div>
+
+            <div style="display:none">
+            <div class="section-label" data-i18n-en="5. Layer heights">5. 층 높이</div>
+            <div class="control-group"><label><span data-i18n-en="Base plate thickness">바닥판 두께</span>: <span id="valBaseThick">3.0</span>mm</label><input type="range" id="baseThick" min="1" max="6" step="0.2" value="3.0" oninput="scheduleUpdate()"></div>
+            <div class="control-group"><label><span data-i18n-en="Outline layer height">외곽선 층 높이</span>: <span id="valOutlineThick">0.4</span>mm</label><input type="range" id="outlineThick" min="0.1" max="2" step="0.1" value="0.1" oninput="scheduleUpdate()"></div>
+            <div class="control-group"><label><span data-i18n-en="Border layer height">테두리 층 높이</span>: <span id="valBorderThick">0.6</span>mm</label><input type="range" id="borderThick" min="0.1" max="2" step="0.1" value="0.1" oninput="scheduleUpdate()"></div>
+            <div class="control-group"><label><span data-i18n-en="Text/emoji height">글자/이모지 높이</span>: <span id="valTextThick">0.8</span>mm</label><input type="range" id="textThick" min="0.1" max="3" step="0.1" value="0.1" oninput="scheduleUpdate()"></div>
+
+            <div class="section-label" data-i18n-en="6. Colors">6. 색상</div>
+            <div class="color-row"><span data-i18n-en="Base plate">바닥판</span><input type="color" id="colBase" value="#e8c48c" oninput="scheduleUpdate()"></div>
+            <div class="color-row"><span data-i18n-en="Outline">외곽선</span><input type="color" id="colOutline" value="#e8c48c" oninput="scheduleUpdate()"></div>
+            <div class="color-row"><span data-i18n-en="Border">테두리</span><input type="color" id="colBorder" value="#5b3a1e" oninput="scheduleUpdate()"></div>
+            <div class="color-row"><span data-i18n-en="Text">텍스트</span><input type="color" id="colText" value="#5b3a1e" oninput="scheduleUpdate()"></div>
+            <div class="color-row" style="display:none"><span data-i18n-en="Left emoji">왼쪽 이모지</span><input type="color" id="colEmojiL" value="#5b3a1e" oninput="scheduleUpdate()"></div>
+            <div class="color-row"><span data-i18n-en="Emoji">이모지</span><input type="color" id="colEmojiR" value="#5b3a1e" oninput="scheduleUpdate()"></div>
+            </div>
+        `;
+
+        ParametricCore.enhanceRangeInputs(shell.controlsBodyEl);
+
+        // 레이저용: STL/3MF 대신 DXF를 받는다. 색으로 레이어를 나누지 못할 때를 위해 새기기만·자르기만도 따로 받을 수 있다.
+        // 휴대폰에서는 아래 버튼 줄이 머리줄로 올라가 좁으므로, 예비 버튼 두 개는 설정 맨 아래에 둔다.
+        shell.controlsFooterEl.insertAdjacentHTML('beforeend',
+            '<button type="button" class="download-btn" id="dxfBtn">레이저 파일(DXF) 받기</button>');
+        shell.controlsBodyEl.insertAdjacentHTML('beforeend', `
+            <div class="section-label">예비: 색이 레이어로 안 나뉠 때</div>
+            <p style="font-size: 0.85em; color: var(--text-muted); margin: 0 0 10px;">두 파일을 RDWorks에서 차례로 가져와 각각 레이어를 정해요. 위치는 그대로 맞춰져 있어요.</p>
+            <div style="display:flex; gap:8px;">
+                <button type="button" class="download-btn" id="dxfEngraveBtn" style="flex:1;">새기기만 DXF</button>
+                <button type="button" class="download-btn" id="dxfCutBtn" style="flex:1;">자르기만 DXF</button>
+            </div>`);
+        document.getElementById('dxfBtn').onclick = function () { downloadDXF(); };
+        document.getElementById('dxfEngraveBtn').onclick = function () { downloadDXF('engrave'); };
+        document.getElementById('dxfCutBtn').onclick = function () { downloadDXF('cut'); };
+        if (window.LangCore) window.LangCore.applyTranslations(document);
+
+        const viewer = ParametricCore.initViewer(shell.viewerEl, {
+            initialCameraPosition: ParametricCore.DEFAULT_CAMERA_PRESETS.ISO
+        });
+        const scene = viewer.scene;
+        const camera = viewer.camera;
+        const controls = viewer.controls;
+
+        ParametricCore.setupResizer(shell.resizerEl, shell.controlsEl, viewer.onWindowResize);
+        ParametricCore.bindViewCube(shell.cubeButtons, camera, controls);
+        ParametricCore.bindDimensionToggle(shell.dimensionToggleBtn);
+        ParametricCore.bindScreenshotButton(shell.screenshotBtn, viewer);
+        shell.resetBtn.onclick = function () { resetToDefaults(); };
+
+        let currentGroup = null;
+        let currentMeshes = {}; // 층 이름(base/outline/border/text/emojiL/emojiR) -> THREE.Mesh
+        let lastGeometryFingerprint = null; // 색상만 바뀐 건지 판별하는 캐시 키
+        let manifoldReady = false;
+        let textFont = null;
+        let emojiFont = null;
+        // 지금 적용 중인 폰트의 캐시 키 — 번들 폰트면 파일명(FONT_OPTIONS[i].file), 업로드
+        // 파일이면 FontCore.loadFontFromFile()이 만들어준 합성 키. readParams()가 매번
+        // FONT_OPTIONS[select.value]를 다시 계산하면 업로드 폰트일 때(select.value가 숫자가
+        // 아니라 캐시 키라서) 배열 인덱싱이 깨지므로, onFontChange()가 갱신해두는 이 값을 쓴다.
+        let currentFontFile = FONT_OPTIONS[DEFAULT_FONT_INDEX].file;
+        let fontSelectPrevValue = String(DEFAULT_FONT_INDEX); // 업로드 취소/실패 시 되돌릴 값
+        let updateTimer = null;
+
+        function scheduleUpdate() {
+            if (updateTimer) clearTimeout(updateTimer);
+            updateTimer = setTimeout(updateModel, 100);
+        }
+
+        function onTextKeydown(event) {
+            if (event.key === 'Enter') scheduleUpdate();
+        }
+
+        function onFontChange() {
+            const select = document.getElementById('fontSelect');
+            if (select.value === '__upload__') {
+                document.getElementById('fontUpload').click();
+                return; // 실제 처리는 fontUpload의 change 핸들러(아래)에서
+            }
+            fontSelectPrevValue = select.value;
+            // 이미 업로드해서 fontCache에 들어있는 폰트라면(캐시 키로 재선택한 경우) 다시
+            // 읽지 않고 바로 꺼내 쓴다.
+            const uploadedFont = FontCore.getFont(select.value);
+            if (uploadedFont) {
+                textFont = uploadedFont;
+                currentFontFile = select.value;
+                updateModel();
+                return;
+            }
+            currentFontFile = FONT_OPTIONS[select.value].file;
+            FontCore.loadFont(currentFontFile, function (font) {
+                textFont = font;
+                updateModel();
+            });
+        }
+
+        document.getElementById('fontUpload').addEventListener('change', function (e) {
+            const file = e.target.files[0];
+            e.target.value = ''; // 같은 파일을 다시 선택해도 change 이벤트가 뜨도록 초기화
+            const select = document.getElementById('fontSelect');
+            if (!file) { select.value = fontSelectPrevValue; return; }
+            FontCore.loadFontFromFile(file, function (font, cacheKey) {
+                const opt = document.createElement('option');
+                opt.value = cacheKey;
+                opt.textContent = '📁 ' + file.name;
+                select.insertBefore(opt, select.querySelector('option[value="__upload__"]'));
+                select.value = cacheKey;
+                fontSelectPrevValue = cacheKey;
+                textFont = font;
+                currentFontFile = cacheKey;
+                updateModel();
+            }, function () {
+                alert(LangCore.pick('폰트 파일을 열 수 없어요. .ttf 또는 .otf 파일인지 확인해 주세요.', 'Could not open the font file. Please make sure it is a .ttf or .otf file.'));
+                select.value = fontSelectPrevValue;
+            });
+        });
+
+        function resetToDefaults() {
+            document.getElementById('inputText').value = DEFAULTS.text;
+            document.getElementById('fontSelect').value = DEFAULTS.fontIndex;
+            document.getElementById('fontSize').value = DEFAULTS.fontSize;
+            document.getElementById('fontWeight').value = DEFAULTS.fontWeight;
+            document.getElementById('spacing').value = DEFAULTS.spacing;
+            document.getElementById('narrowWiden').value = DEFAULTS.narrowWiden;
+            document.getElementById('emojiL').value = DEFAULTS.emojiL;
+            document.getElementById('emojiLScale').value = DEFAULTS.emojiLScale;
+            document.getElementById('emojiLOffset').value = DEFAULTS.emojiLOffset;
+            document.getElementById('emojiLMirror').checked = DEFAULTS.emojiLMirror;
+            document.getElementById('emojiR').value = DEFAULTS.emojiR;
+            document.getElementById('emojiRScale').value = DEFAULTS.emojiRScale;
+            document.getElementById('emojiROffset').value = DEFAULTS.emojiROffset;
+            document.getElementById('emojiRMirror').checked = DEFAULTS.emojiRMirror;
+            document.getElementById('outlineW').value = DEFAULTS.outlineW;
+            document.getElementById('borderW').value = DEFAULTS.borderW;
+            document.getElementById('innerMargin').value = DEFAULTS.innerMargin;
+            document.getElementById('outerMargin').value = DEFAULTS.outerMargin;
+            document.getElementById('keyringOn').checked = DEFAULTS.keyringOn;
+            document.getElementById('keyringX').value = DEFAULTS.keyringX;
+            document.getElementById('keyringY').value = DEFAULTS.keyringY;
+            document.getElementById('keyringHoleSize').value = DEFAULTS.keyringHoleSize;
+            document.getElementById('keyringRim').value = DEFAULTS.keyringRim;
+            document.getElementById('baseThick').value = DEFAULTS.baseThick;
+            document.getElementById('outlineThick').value = DEFAULTS.outlineThick;
+            document.getElementById('borderThick').value = DEFAULTS.borderThick;
+            document.getElementById('textThick').value = DEFAULTS.textThick;
+            document.getElementById('colBase').value = DEFAULTS.colBase;
+            document.getElementById('colOutline').value = DEFAULTS.colOutline;
+            document.getElementById('colBorder').value = DEFAULTS.colBorder;
+            document.getElementById('colText').value = DEFAULTS.colText;
+            document.getElementById('colEmojiL').value = DEFAULTS.colEmojiL;
+            document.getElementById('colEmojiR').value = DEFAULTS.colEmojiR;
+            ParametricCore.resetCameraTo(camera, controls, ParametricCore.DEFAULT_CAMERA_PRESETS.ISO);
+            onFontChange(); // 폰트를 다시 로드하면서 모델도 재생성
+        }
+
+        // 글자 윤곽선 추출 + 자간/장평 배치 + 글자 단위 캐싱은 font-core.js의
+        // FontCore.buildCenteredContours()가 담당한다 (갤러리6과 공유하기 위해 그쪽으로 옮김).
+
+        // ---------- 실제 모델링 ----------
+        // curveSegments는 호출부(미리보기/내보내기)가 원하는 곡선 해상도를 넘겨준다.
+        const PREVIEW_CURVE_SEGMENTS = 16; // 라이브 조작 중 — 카드가 작아서 이 정도로도 충분히 매끈해 보임
+        const EXPORT_CURVE_SEGMENTS = 48;  // STL 내보낼 때 — 실제 인쇄 품질
+
+        // 텍스트/이모지/바닥판/외곽선/테두리/구멍의 "2D 도형"만 만들어서 돌려준다. 압출(두께)과
+        // Y 위치는 여기 포함되지 않는다 — 바닥판 두께 같은 슬라이더는 이 2D 도형에 전혀 영향을
+        // 주지 않으므로(높이만 바뀔 뿐 모양은 그대로), 그런 경우엔 이 결과를 캐시해서 재사용하고
+        // 압출만 다시 하면 된다(아래 shapeCache/getPreviewShapes 참고).
+        function buildShapes(p, curveSegments) {
+            const scratch = []; // 최종 결과에 안 남는 중간 산출물만 여기 담아 정리한다
+            function track(m) { scratch.push(m); return m; }
+
+            let textXS = null;
+            const textContours = FontCore.buildCenteredContours(p.text, p.textFont, p.fontFile, p.fontSize, p.spacing, curveSegments);
+            if (textContours.length) {
+                textXS = track(ManifoldCore.contoursToXS(textContours));
+                if (Math.abs(p.fontWeight) > 0.001) textXS = track(textXS.offset(p.fontWeight));
+                if (Math.abs(p.narrowWiden) > 0.001) textXS = track(textXS.scale([1 + p.narrowWiden / 100, 1]));
+            }
+
+            // 원본과 동일하게 실제 글자 폭이 아니라 "글자 수 x 크기" 근사값으로 이모지 위치를 잡는다.
+            const textWidthHalf = (Array.from(p.text).length * p.fontSize * p.spacing * (1 + p.narrowWiden / 100)) / 2;
+
+            function buildEmojiXS(text, scale, mirror, offsetDist, side) {
+                if (!text || !text.length) return null;
+                const contours = FontCore.buildCenteredContours(text, p.emojiFont, EMOJI_FONT_FILE, p.fontSize, 1, curveSegments);
+                if (!contours.length) return null;
+                let xs = track(ManifoldCore.contoursToXS(contours));
+                if (Math.abs(scale - 1) > 0.001) xs = track(xs.scale([scale, scale]));
+                if (mirror) xs = track(xs.scale([-1, 1]));
+                const tx = side === 'L' ? -(textWidthHalf + offsetDist) : (textWidthHalf + offsetDist);
+                xs = track(xs.translate([tx, 0]));
+                return xs;
+            }
+
+            const emojiLXS = buildEmojiXS(p.emojiL, p.emojiLScale, p.emojiLMirror, p.emojiLOffset, 'L');
+            const emojiRXS = buildEmojiXS(p.emojiR, p.emojiRScale, p.emojiRMirror, p.emojiROffset, 'R');
+
+            // master_base_2d = union(텍스트, 왼쪽 이모지, 오른쪽 이모지)
+            let masterXS = textXS;
+            if (emojiLXS) masterXS = masterXS ? track(masterXS.add(emojiLXS)) : emojiLXS;
+            if (emojiRXS) masterXS = masterXS ? track(masterXS.add(emojiRXS)) : emojiRXS;
+
+            // 키링 구멍 자리의 링(반지름 = 구멍/2 + 테두리 두께)까지 합친 버전 — 바닥판/테두리
+            // 층의 바깥/안쪽 offset에는 이 링까지 포함시켜야 구멍 둘레에 재질이 남는다.
+            // 연수용: 구멍 X를 실제 글자 왼쪽 끝에 붙여 놓는다(원본은 -21mm 고정이라 1~2글자면 고리가
+            // 이름표와 떨어져 따로 잘렸다). 슬라이더는 기본값에서 옮긴 만큼만 더한다.
+            const textLeft = masterXS ? masterXS.bounds().min[0] : 0;
+            const holeX = textLeft - 3.5 + (p.keyringX - DEFAULTS.keyringX);
+            let masterWithRing = masterXS;
+            if (p.keyringOn) {
+                let ringXS = track(ManifoldCore.circleXS(p.keyringHoleSize / 2 + p.keyringRim, 48));
+                ringXS = track(ringXS.translate([holeX, p.keyringY]));
+                masterWithRing = masterXS ? track(masterXS.add(ringXS)) : ringXS;
+            }
+
+            if (!masterWithRing) return null; // 텍스트/이모지/키링 모두 없음
+
+            // 2층: 글자 외곽선 (텍스트+이모지만, 키링 링은 제외)
+            const outlineXS = masterXS ? track(masterXS.offset(p.outlineW)) : null;
+
+            // 1층: 바닥판 (텍스트+이모지+키링 링을 넉넉하게 offset)
+            const baseOffsetAmt = p.outlineW + p.innerMargin + p.borderW + p.outerMargin;
+            const baseXS = track(masterWithRing.offset(baseOffsetAmt));
+
+            // 3층: 테두리 링 (바깥 offset - 안쪽 offset)
+            const borderOuterXS = track(masterWithRing.offset(p.outlineW + p.innerMargin + p.borderW));
+            const borderInnerXS = track(masterWithRing.offset(p.outlineW + p.innerMargin));
+            let borderRingXS = track(borderOuterXS.subtract(borderInnerXS));
+
+            // 글자 안쪽의 작은 구멍(예: "이"의 ㅇ 속공간)은 바깥쪽 offset에서는 완전히
+            // 메워지는데 안쪽(더 작은) offset에서는 아직 살짝 안 메워지고 남을 수 있다 —
+            // 이 상태로 위에서 바깥-안쪽을 빼면, 메인 테두리 루프와 안 이어진 아주 작은
+            // 테두리 섬 조각(잔해물)이 글자 속에 남는다. decompose()로 서로 떨어진
+            // 조각들을 나눠서, 진짜 테두리 한 칸보다 훨씬 작은(면적이 테두리 두께의
+            // 제곱 몇 배 수준밖에 안 되는) 조각만 잔해물로 보고 제거한다 — 이모지처럼
+            // 의도적으로 멀리 떨어져 있는 정상적인 별도 테두리 루프는 그보다 훨씬 커서
+            // 영향받지 않는다.
+            if (borderRingXS && !borderRingXS.isEmpty()) {
+                const ringPieces = borderRingXS.decompose();
+                if (ringPieces.length > 1) {
+                    const debrisThreshold = Math.max(p.borderW, 0.1) * Math.max(p.borderW, 0.1) * 4;
+                    const keptPieces = [];
+                    ringPieces.forEach(function (piece) {
+                        track(piece);
+                        if (piece.area() > debrisThreshold) keptPieces.push(piece);
+                    });
+                    if (keptPieces.length && keptPieces.length !== ringPieces.length) {
+                        let cleaned = keptPieces[0];
+                        for (let i = 1; i < keptPieces.length; i++) cleaned = track(cleaned.add(keptPieces[i]));
+                        borderRingXS = cleaned;
+                    }
+                } else {
+                    ringPieces.forEach(function (piece) { piece.delete(); });
+                }
+            }
+
+            let holeXS = null;
+            if (p.keyringOn) {
+                holeXS = track(ManifoldCore.circleXS(p.keyringHoleSize / 2, 48));
+                holeXS = track(holeXS.translate([holeX, p.keyringY]));
+            }
+
+            // 최종적으로 돌려줄 도형들은 scratch(중간 산출물 정리 목록)에서 빼둔다 — 캐시로
+            // 살아남아야 하므로 여기서 지우면 안 된다. 무효화될 때 disposeShapes()가 대신 지운다.
+            const keep = new Set([textXS, emojiLXS, emojiRXS, outlineXS, baseXS, borderRingXS, holeXS].filter(Boolean));
+            scratch.forEach(function (m) { if (m && !keep.has(m) && typeof m.delete === 'function') m.delete(); });
+
+            return { textXS: textXS, emojiLXS: emojiLXS, emojiRXS: emojiRXS, outlineXS: outlineXS, baseXS: baseXS, borderRingXS: borderRingXS, holeXS: holeXS };
+        }
+
+        function disposeShapes(shapes) {
+            if (!shapes) return;
+            ['textXS', 'emojiLXS', 'emojiRXS', 'outlineXS', 'baseXS', 'borderRingXS', 'holeXS'].forEach(function (key) {
+                const xs = shapes[key];
+                if (xs && typeof xs.delete === 'function') xs.delete();
+            });
+        }
+
+        // 라이브 미리보기 전용 2D 도형 캐시. shapeFingerprint(색·두께 제외 지오메트리 값)가
+        // 이전과 같으면 여기 있는 걸 그대로 재사용하고, 다르면 새로 만들어서 갈아끼운다.
+        let shapeCache = null; // { fingerprint, shapes }
+
+        function getPreviewShapes(p, shapeFp) {
+            if (shapeCache && shapeCache.fingerprint === shapeFp) return shapeCache.shapes;
+            if (shapeCache) disposeShapes(shapeCache.shapes);
+            shapeCache = null;
+            let shapes;
+            try {
+                shapes = buildShapes(p, PREVIEW_CURVE_SEGMENTS);
+            } catch (err) {
+                console.error('키링 도형 생성 실패:', err);
+                return null;
+            }
+            if (shapes) shapeCache = { fingerprint: shapeFp, shapes: shapes };
+            return shapes;
+        }
+
+        // 라이브 미리보기용: union 없이 층마다 독립된 THREE.Mesh를 만든다. 2D 도형은 캐시에서
+        // 가져오고(모양이 안 바뀌었으면 재사용), 압출/구멍 절단만 매번 새로 한다. 키링 구멍
+        // 원기둥은 층마다 새로 만들지 않고 한 번만 만들어서 재사용한다.
+        function buildPreviewMeshes(p, shapeFp) {
+            const shapes = getPreviewShapes(p, shapeFp);
+            if (!shapes) return null;
+
+            const layerDefs = [
+                { name: 'base', xs: shapes.baseXS, height: p.baseThick, color: p.colBase, skipY: true },
+                { name: 'border', xs: shapes.borderRingXS, height: p.borderThick, color: p.colBorder },
+                { name: 'text', xs: shapes.textXS, height: p.textThick, color: p.colText },
+                { name: 'emojiL', xs: shapes.emojiLXS, height: p.textThick, color: p.colEmojiL },
+                { name: 'emojiR', xs: shapes.emojiRXS, height: p.textThick, color: p.colEmojiR }
+            ];
+
+            const owned = []; // 이번 호출에서 새로 압출한 3D 솔리드 — 캐시된 2D shapes와는 별개, 다 쓰면 정리
+            function own(m) { owned.push(m); return m; }
+
+            let holeCylPositioned = null;
+            if (shapes.holeXS) {
+                const holeCyl = own(ManifoldCore.extrudeXS(shapes.holeXS, p.baseThick + p.borderThick + 2));
+                holeCylPositioned = own(ManifoldCore.translateY(holeCyl, -1));
+            }
+
+            const meshes = [];
+            layerDefs.forEach(function (def) {
+                if (!def.xs) return;
+                let solid = own(ManifoldCore.extrudeXS(def.xs, def.height));
+                if (!def.skipY) solid = own(ManifoldCore.translateY(solid, p.baseThick));
+
+                const idToColor = new Map([[solid.originalID(), def.color]]);
+                let finalSolid = solid;
+                let cutResult = null;
+                if (holeCylPositioned) {
+                    idToColor.set(holeCylPositioned.originalID(), def.color); // 구멍 안쪽 벽면도 같은 층 색으로
+                    cutResult = ManifoldCore.subtract(solid, holeCylPositioned);
+                    finalSolid = cutResult;
+                }
+                const mesh = ManifoldCore.toThreeMesh(finalSolid, idToColor, def.color);
+                mesh.castShadow = false;
+                mesh.receiveShadow = false;
+                mesh.userData.layerName = def.name;
+                meshes.push(mesh);
+                if (cutResult) cutResult.delete();
+            });
+
+            owned.forEach(function (m) { if (m && typeof m.delete === 'function') m.delete(); });
+            return meshes.length ? meshes : null;
+        }
+
+        // STL 내보내기 전용: 부품을 진짜로 하나의 매니폴드로 union하고, 구멍을 전체 높이로
+        // 한 번에 관통시킨다. 미리보기 캐시와는 무관하게 매번 새로(인쇄 품질로) 만든다.
+        function buildFusedSolid(p, track) {
+            const shapes = buildShapes(p, EXPORT_CURVE_SEGMENTS);
+            if (!shapes) return null;
+
+            const idToColor = new Map();
+            const parts = [];
+
+            function extrudeAndStack(xs, height, color) {
+                if (!xs) return;
+                const solid = track(ManifoldCore.extrudeXS(xs, height));
+                idToColor.set(solid.originalID(), color);
+                const positioned = track(ManifoldCore.translateY(solid, p.baseThick));
+                parts.push(positioned);
+            }
+
+            if (shapes.baseXS) {
+                const baseSolid = track(ManifoldCore.extrudeXS(shapes.baseXS, p.baseThick));
+                idToColor.set(baseSolid.originalID(), p.colBase);
+                parts.push(baseSolid); // y=0에서 시작하므로 별도 translateY 불필요
+            }
+            extrudeAndStack(shapes.outlineXS, p.outlineThick, p.colOutline);
+            extrudeAndStack(shapes.borderRingXS, p.borderThick, p.colBorder);
+            extrudeAndStack(shapes.textXS, p.textThick, p.colText);
+            extrudeAndStack(shapes.emojiLXS, p.textThick, p.colEmojiL);
+            extrudeAndStack(shapes.emojiRXS, p.textThick, p.colEmojiR);
+
+            let holeCylPositioned = null;
+            if (shapes.holeXS) {
+                const holeCyl = track(ManifoldCore.extrudeXS(shapes.holeXS, p.baseThick + p.borderThick + 2));
+                // 빼내는 도구(원기둥)도 markAsOriginal()로 실제 originalID를 갖고 있어서, 빼고 난
+                // 뒤 구멍 안쪽 벽면(도구 자신의 표면이 그대로 드러난 부분)에 그 ID가 남는다 —
+                // 색을 안 정해주면 기본 회색(fallback)으로 보이므로 바닥판 색과 맞춰둔다.
+                idToColor.set(holeCyl.originalID(), p.colBase);
+                holeCylPositioned = track(ManifoldCore.translateY(holeCyl, -1));
+            }
+
+            disposeShapes(shapes); // 2D 도형은 압출이 다 끝났으니 이제 정리해도 된다(3D 솔리드는 아직 필요)
+
+            let fused = parts[0];
+            for (let i = 1; i < parts.length; i++) {
+                fused = track(ManifoldCore.union(fused, parts[i]));
+            }
+            if (holeCylPositioned) {
+                fused = track(ManifoldCore.subtract(fused, holeCylPositioned));
+            }
+
+            return { fused: fused, idToColor: idToColor };
+        }
+
+        function disposeCurrentThreeMesh() {
+            ParametricCore.updateDimensionOverlay(scene, null);
+            if (!currentGroup) return;
+            scene.remove(currentGroup);
+            currentGroup.traverse(function (obj) {
+                if (obj.geometry) obj.geometry.dispose();
+                if (Array.isArray(obj.material)) obj.material.forEach(function (m) { m.dispose(); });
+                else if (obj.material) obj.material.dispose();
+            });
+            currentGroup = null;
+            currentMeshes = {};
+        }
+
+        function readParams() {
+            return {
+                text: document.getElementById('inputText').value || '',
+                textFont: textFont, emojiFont: emojiFont,
+                fontFile: currentFontFile,
+                fontSize: parseFloat(document.getElementById('fontSize').value),
+                fontWeight: parseFloat(document.getElementById('fontWeight').value),
+                spacing: parseFloat(document.getElementById('spacing').value),
+                narrowWiden: parseFloat(document.getElementById('narrowWiden').value),
+                emojiL: document.getElementById('emojiL').value || '',
+                emojiLScale: parseFloat(document.getElementById('emojiLScale').value),
+                emojiLOffset: parseFloat(document.getElementById('emojiLOffset').value),
+                emojiLMirror: document.getElementById('emojiLMirror').checked,
+                emojiR: document.getElementById('emojiR').value || '',
+                emojiRScale: parseFloat(document.getElementById('emojiRScale').value),
+                emojiROffset: parseFloat(document.getElementById('emojiROffset').value),
+                emojiRMirror: document.getElementById('emojiRMirror').checked,
+                outlineW: parseFloat(document.getElementById('outlineW').value),
+                borderW: parseFloat(document.getElementById('borderW').value),
+                innerMargin: parseFloat(document.getElementById('innerMargin').value),
+                outerMargin: parseFloat(document.getElementById('outerMargin').value),
+                keyringOn: document.getElementById('keyringOn').checked,
+                keyringX: parseFloat(document.getElementById('keyringX').value),
+                keyringY: parseFloat(document.getElementById('keyringY').value),
+                keyringHoleSize: parseFloat(document.getElementById('keyringHoleSize').value),
+                keyringRim: parseFloat(document.getElementById('keyringRim').value),
+                baseThick: parseFloat(document.getElementById('baseThick').value),
+                outlineThick: parseFloat(document.getElementById('outlineThick').value),
+                borderThick: parseFloat(document.getElementById('borderThick').value),
+                textThick: parseFloat(document.getElementById('textThick').value),
+                colBase: document.getElementById('colBase').value,
+                colOutline: document.getElementById('colOutline').value,
+                colBorder: document.getElementById('colBorder').value,
+                colText: document.getElementById('colText').value,
+                colEmojiL: document.getElementById('colEmojiL').value,
+                colEmojiR: document.getElementById('colEmojiR').value
+            };
+        }
+
+        // 2D 도형(모양)에 영향을 주는 값들만 뽑아 지문을 만든다 — 이 값이 이전과 같으면
+        // buildShapes()를 다시 돌릴 필요 없이 캐시된 2D 도형을 재사용해도 된다는 뜻이다.
+        // 두께(baseThick 등)와 색상은 일부러 뺐다 — 그 값들은 2D 모양에 전혀 영향을 안 준다.
+        function shapeFingerprint(p) {
+            return JSON.stringify({
+                text: p.text, fontFile: p.fontFile,
+                fontSize: p.fontSize, fontWeight: p.fontWeight, spacing: p.spacing, narrowWiden: p.narrowWiden,
+                emojiL: p.emojiL, emojiLScale: p.emojiLScale, emojiLOffset: p.emojiLOffset, emojiLMirror: p.emojiLMirror,
+                emojiR: p.emojiR, emojiRScale: p.emojiRScale, emojiROffset: p.emojiROffset, emojiRMirror: p.emojiRMirror,
+                outlineW: p.outlineW, borderW: p.borderW, innerMargin: p.innerMargin, outerMargin: p.outerMargin,
+                keyringOn: p.keyringOn, keyringX: p.keyringX, keyringY: p.keyringY, keyringHoleSize: p.keyringHoleSize, keyringRim: p.keyringRim
+            });
+        }
+
+        // 색상은 지오메트리(모양)에 전혀 영향을 주지 않으므로, shapeFingerprint에 두께류만
+        // 더해서 전체 지오메트리 지문을 만든다 — 이 값이 이전과 같으면 색상만 바뀐 것이므로
+        // Manifold-3D 재계산 없이 기존 메시의 재질 색만 바꾸고 끝낸다.
+        function geometryFingerprint(p) {
+            return shapeFingerprint(p) + '|' + JSON.stringify({
+                baseThick: p.baseThick, outlineThick: p.outlineThick, borderThick: p.borderThick, textThick: p.textThick
+            });
+        }
+
+        const LAYER_COLOR_KEYS = { base: 'colBase', outline: 'colOutline', border: 'colBorder', text: 'colText', emojiL: 'colEmojiL', emojiR: 'colEmojiR' };
+
+        function applyColorsOnly(params) {
+            Object.keys(LAYER_COLOR_KEYS).forEach(function (name) {
+                const mesh = currentMeshes[name];
+                if (!mesh) return;
+                const mats = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
+                mats.forEach(function (m) { m.color.set(params[LAYER_COLOR_KEYS[name]]); });
+            });
+        }
+
+        function updateModel() {
+            if (!manifoldReady || !textFont || !emojiFont) return;
+
+            const params = readParams();
+
+            [
+                ['valFontSize', params.fontSize], ['valFontWeight', params.fontWeight],
+                ['valSpacing', params.spacing], ['valNarrowWiden', params.narrowWiden],
+                ['valEmojiLScale', params.emojiLScale], ['valEmojiLOffset', params.emojiLOffset],
+                ['valEmojiRScale', params.emojiRScale], ['valEmojiROffset', params.emojiROffset],
+                ['valOutlineW', params.outlineW], ['valBorderW', params.borderW],
+                ['valInnerMargin', params.innerMargin], ['valOuterMargin', params.outerMargin],
+                ['valKeyringX', params.keyringX], ['valKeyringY', params.keyringY],
+                ['valKeyringHoleSize', params.keyringHoleSize], ['valKeyringRim', params.keyringRim],
+                ['valBaseThick', params.baseThick], ['valOutlineThick', params.outlineThick],
+                ['valBorderThick', params.borderThick], ['valTextThick', params.textThick]
+            ].forEach(function (pair) { document.getElementById(pair[0]).innerText = pair[1]; });
+
+            const fingerprint = geometryFingerprint(params);
+            if (currentGroup && fingerprint === lastGeometryFingerprint) {
+                applyColorsOnly(params);
+                return;
+            }
+
+            const meshes = buildPreviewMeshes(params, shapeFingerprint(params));
+
+            disposeCurrentThreeMesh();
+            if (!meshes) return;
+
+            currentGroup = new THREE.Group();
+            currentMeshes = {};
+            meshes.forEach(function (mesh) {
+                currentGroup.add(mesh);
+                currentMeshes[mesh.userData.layerName] = mesh;
+            });
+            scene.add(currentGroup);
+            ParametricCore.updateDimensionOverlay(scene, currentGroup);
+            lastGeometryFingerprint = fingerprint;
+        }
+
+        // ---------- 레이저용 DXF ----------
+        // 자르기 = 바닥판 바깥선 + 키링 구멍, 새기기 = 테두리 띠 + 글자 + 이모지.
+        // 새기기는 하나로 합쳐서(add) 내보낸다 — 획이 겹치는 글꼴도 겹친 곳이 비어 새겨지지 않는다.
+        // RDWorks가 잘 여는 옛 형식(R12): 색 1 = 빨강(자르기), 7 = 검정(새기기). 단위 mm.
+        // part: 'cut' / 'engrave'면 그것만 넣는다(색이 레이어로 안 나뉠 때 쓰는 예비용).
+        function buildLaserPolys() {
+            const p = readParams();
+            const shapes = buildShapes(p, EXPORT_CURVE_SEGMENTS);
+            if (!shapes) return null;
+            const tmp = [];
+            let cutXS = shapes.baseXS;
+            if (shapes.holeXS) { cutXS = shapes.baseXS.subtract(shapes.holeXS); tmp.push(cutXS); }
+            let engXS = null;
+            [shapes.borderRingXS, shapes.textXS, shapes.emojiLXS, shapes.emojiRXS].forEach(function (xs) {
+                if (!xs || xs.isEmpty()) return;
+                if (!engXS) { engXS = xs; return; }
+                engXS = engXS.add(xs);
+                tmp.push(engXS);
+            });
+            // 바닥판이 두 조각 이상이면(고리가 이름표와 떨어짐) 그대로 자르면 판재를 버리게 된다
+            const basePieces = shapes.baseXS.decompose();
+            const apart = basePieces.length > 1;
+            basePieces.forEach(function (m) { m.delete(); });
+            if (apart) {
+                tmp.forEach(function (m) { m.delete(); });
+                disposeShapes(shapes);
+                alert('고리 구멍이 이름표와 떨어져 있어요. "구멍 X 위치"를 글자 쪽으로 옮겨 주세요.');
+                return null;
+            }
+            const cut = cutXS.toPolygons();
+            const engrave = engXS ? engXS.toPolygons() : [];
+            tmp.forEach(function (m) { m.delete(); });
+            disposeShapes(shapes);
+            // 왼쪽 아래를 (0,0)에 맞춘다
+            let minX = Infinity, minY = Infinity;
+            cut.forEach(function (poly) { poly.forEach(function (pt) { minX = Math.min(minX, pt[0]); minY = Math.min(minY, pt[1]); }); });
+            const move = function (poly) { return poly.map(function (pt) { return [pt[0] - minX, pt[1] - minY]; }); };
+            return { text: p.text, cut: cut.map(move), engrave: engrave.map(move) };
+        }
+
+        function downloadDXF(part) {
+            if (!manifoldReady || !textFont || !emojiFont) return;
+            let polys;
+            try { polys = buildLaserPolys(); } catch (err) { console.error('DXF 생성 실패:', err); return; }
+            if (!polys) return;
+            const L = [];
+            function add() { for (let i = 0; i < arguments.length; i++) L.push(String(arguments[i])); }
+            function polyline(poly, layer, color) {
+                add('0', 'POLYLINE', '8', layer, '62', color, '66', '1', '70', '1', '10', '0', '20', '0', '30', '0');
+                poly.forEach(function (pt) { add('0', 'VERTEX', '8', layer, '10', pt[0].toFixed(3), '20', pt[1].toFixed(3), '30', '0'); });
+                add('0', 'SEQEND', '8', layer);
+            }
+            add('0', 'SECTION', '2', 'HEADER', '9', '$ACADVER', '1', 'AC1009', '0', 'ENDSEC', '0', 'SECTION', '2', 'ENTITIES');
+            if (part !== 'cut') polys.engrave.forEach(function (poly) { polyline(poly, 'ENGRAVE', 7); });
+            if (part !== 'engrave') polys.cut.forEach(function (poly) { polyline(poly, 'CUT', 1); });
+            add('0', 'ENDSEC', '0', 'EOF');
+
+            const name = (polys.text || '').replace(/[\\/:*?"<>|()\s]/g, '') || '이름표';
+            const tag = part === 'cut' ? '-자르기만' : part === 'engrave' ? '-새기기만' : '';
+            const blob = new Blob([L.join('\r\n') + '\r\n'], { type: 'application/dxf' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = '이름표-' + name + tag + '.dxf';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            setTimeout(function () { URL.revokeObjectURL(link.href); }, 10000);
+        }
+        window.downloadDXF = downloadDXF;
+        window.__buildLaserPolys = buildLaserPolys; // 확인용(화면 기능 아님)
+
+        function downloadSTL() {
+            if (!manifoldReady || !textFont || !emojiFont) return;
+            const params = readParams();
+
+            const scratch = [];
+            function track(m) { scratch.push(m); return m; }
+
+            let result;
+            try {
+                result = buildFusedSolid(params, track);
+            } catch (err) {
+                console.error('STL 생성 실패:', err);
+                scratch.forEach(function (m) { if (m && typeof m.delete === 'function') m.delete(); });
+                return;
+            }
+            if (!result) {
+                scratch.forEach(function (m) { if (m && typeof m.delete === 'function') m.delete(); });
+                return;
+            }
+
+            const mesh = ManifoldCore.toThreeMesh(result.fused, result.idToColor);
+            scratch.forEach(function (m) { if (m && typeof m.delete === 'function') m.delete(); });
+
+            const exportGroup = new THREE.Group();
+            exportGroup.add(mesh);
+            const textValue = params.text || LangCore.pick('키링', 'keyring');
+            ParametricCore.exportSTL(exportGroup, LangCore.pick(`${textValue}_키링.stl`, `${textValue}_keyring.stl`));
+
+            mesh.geometry.dispose();
+            (Array.isArray(mesh.material) ? mesh.material : [mesh.material]).forEach(function (m) { m.dispose(); });
+        }
+
+        // downloadSTL()과 동일하게 부품별 색을 입힌 mesh를 만든다 — toThreeMesh(result.fused,
+        // result.idToColor)가 이미 부품마다 실제 색을 넣어주므로(STL 내보내기 때는 그 색을
+        // 버렸을 뿐), 3MF 내보내기에서는 이 mesh를 그대로 넘기기만 하면 색이 파일에 남는다.
+        function download3MF() {
+            if (!manifoldReady || !textFont || !emojiFont) return;
+            const params = readParams();
+
+            const scratch = [];
+            function track(m) { scratch.push(m); return m; }
+
+            let result;
+            try {
+                result = buildFusedSolid(params, track);
+            } catch (err) {
+                console.error('3MF 생성 실패:', err);
+                scratch.forEach(function (m) { if (m && typeof m.delete === 'function') m.delete(); });
+                return;
+            }
+            if (!result) {
+                scratch.forEach(function (m) { if (m && typeof m.delete === 'function') m.delete(); });
+                return;
+            }
+
+            const mesh = ManifoldCore.toThreeMesh(result.fused, result.idToColor);
+            scratch.forEach(function (m) { if (m && typeof m.delete === 'function') m.delete(); });
+
+            const exportGroup = new THREE.Group();
+            exportGroup.add(mesh);
+            const textValue = params.text || LangCore.pick('키링', 'keyring');
+            ThreeMFCore.export3MF(exportGroup, LangCore.pick(`${textValue}_키링.3mf`, `${textValue}_keyring.3mf`));
+
+            mesh.geometry.dispose();
+            (Array.isArray(mesh.material) ? mesh.material : [mesh.material]).forEach(function (m) { m.dispose(); });
+        }
+
+        window.scheduleUpdate = scheduleUpdate;
+        window.onTextKeydown = onTextKeydown;
+        window.onFontChange = onFontChange;
+        window.download3MF = download3MF;
+        window.downloadSTL = downloadSTL;
+        // 메인화면 카드 미리보기(GLB)를 구울 때 바깥에서 완성된 모델을 꺼내가기 위한 훅.
+        // 실제 사용자 기능은 아니고, index.html의 미리보기 파일을 다시 구울 때만 쓴다.
+        window.__getPreviewGroup = function () { return currentGroup; };
+
+        async function main() {
+            await ManifoldCore.ready;
+            manifoldReady = true;
+            FontCore.loadFont(EMOJI_FONT_FILE, function (font) {
+                emojiFont = font;
+                updateModel();
+            });
+            onFontChange(); // 기본 폰트 로드 후 첫 모델 생성 시도 (이모지 폰트도 준비돼야 실제로 만들어짐)
+        }
+        main();
+    </script>
+<!-- 방문 집계: Cloudflare Web Analytics(쿠키 없음). 실제 주소에서만 불러와 로컬 미리보기는 세지 않는다 -->
+<script>if(location.hostname==='maker-ssam.github.io'){var s=document.createElement('script');s.defer=true;s.src='https://static.cloudflareinsights.com/beacon.min.js';s.setAttribute('data-cf-beacon','{"token": "50978c2fd5224087936fd5e326e45675"}');document.body.appendChild(s);}</script>
+</body>
+</html>
