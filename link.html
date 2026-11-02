@@ -24,19 +24,30 @@
   <!-- 짧은 주소(bit.ly → 이 사이트). 글자 크기는 아래 fit()이 무대 폭에 맞춰 한 줄로 최대한 키운다 -->
   <div class="abs lk-url" style="left:100px;top:730px;width:1720px;height:300px"><span>bit.ly/2026부설연수</span></div>
 </section>
+
+<section class="slide" id="c_padlet" data-tile="black" data-title="0. 접속링크 · 패들렛"
+  data-notes="두 번째 주소는 패들렛입니다. 휴대폰 카메라로 QR을 찍거나 bit.ly/전북메이커 를 입력하면 열립니다.">
+  <div class="abs h2" style="left:100px;top:84px">0. 접속링크 · 패들렛</div>
+  <!-- 단축 주소만 적는다(패들렛 원래 주소에는 계정 아이디가 들어 있음) -->
+  <div class="qrbox abs" style="left:712px;top:224px;padding:24px"><div data-qr="https://bit.ly/%EC%A0%84%EB%B6%81%EB%A9%94%EC%9D%B4%EC%BB%A4" data-size="448"></div></div>
+  <a class="abs lk-url" href="https://bit.ly/%EC%A0%84%EB%B6%81%EB%A9%94%EC%9D%B4%EC%BB%A4" target="_blank" rel="noopener" style="left:100px;top:730px;width:1720px;height:300px"><span>bit.ly/전북메이커</span></a>
+</section>
 <style>
-#c_link .lk-url{display:flex;align-items:center;justify-content:center;white-space:nowrap;font-weight:800;letter-spacing:-.02em;line-height:1;color:var(--action-dark)}
+.lk-url{display:flex;align-items:center;justify-content:center;white-space:nowrap;font-weight:800;letter-spacing:-.02em;line-height:1;color:var(--action-dark)}
 </style>
 <script>
 (function () {
   /* 주소가 줄바꿈 없이 1720×300 칸을 가득 채우는 가장 큰 글자 크기 */
   function fit() {
-    const el = document.querySelector('#c_link .lk-url');
-    el.style.fontSize = '100px';
-    const w = el.firstElementChild.offsetWidth;   /* 무대 배율과 상관없는 글자 폭 */
-    el.style.fontSize = Math.floor(Math.min(1720 * 100 / w, 280)) + 'px';
+    document.querySelectorAll('.lk-url').forEach(el => {
+      const old = el.style.fontSize;
+      el.style.fontSize = '100px';
+      const w = el.firstElementChild.offsetWidth;   /* 무대 배율과 상관없는 글자 폭. 안 보이는 장은 0 */
+      el.style.fontSize = w ? Math.floor(Math.min(1720 * 100 / w, 280)) + 'px' : old;
+    });
   }
   Deck.scene('c_link', { enter: fit });
+  Deck.scene('c_padlet', { enter: fit });
   if (document.fonts) document.fonts.ready.then(fit);
 })();
 </script>
