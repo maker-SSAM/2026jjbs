@@ -125,7 +125,8 @@
 
   function keys(e) {
     if (e.metaKey || e.ctrlKey || e.altKey) return;
-    const k = e.key;
+    /* 글자 키는 자판 위치(e.code)로 — 한글 입력 상태에서도 F·N·O 등이 먹게 (2026jjbs에서 고침, Lecture-Notes 원본과 다른 곳) */
+    const k = /^Key[A-Z]$/.test(e.code) ? e.code.slice(3) : e.key;
     if (/^[0-9]$/.test(k)) { buf += k; return; }
     if (k === 'Enter' && buf) { go(+buf); buf = ''; return; }
     buf = '';

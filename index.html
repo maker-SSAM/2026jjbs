@@ -62,9 +62,13 @@ h1{margin:.3em 0 0;font-size:max(34px,6.25vw);line-height:1.12;font-weight:700;l
   </ol>
 </main>
 <script>
-/* 발표할 때 숫자 키 0~4로 바로 가기 */
+/* 발표할 때 숫자 키 0~4로 바로 가기, F로 전체 화면 켜기/끄기(한글 입력 상태에서도 되게 e.code로) */
 addEventListener('keydown', function (e) {
   if (e.metaKey || e.ctrlKey || e.altKey) return;
+  if (e.code === 'KeyF') {
+    if (document.fullscreenElement) document.exitFullscreen(); else document.documentElement.requestFullscreen();
+    return;
+  }
   var a = document.querySelectorAll('.go a')[+e.key];
   if (/^[0-4]$/.test(e.key) && a) location.href = a.href;
 });
