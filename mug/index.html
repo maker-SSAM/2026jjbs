@@ -31,7 +31,7 @@
 </section>
 
 <section class="slide" id="m_sub" data-tile="dark" data-title="승화: 잉크가 기체가 되어 스며들어요"
-  data-notes="승화는 고체가 액체를 거치지 않고 바로 기체가 되는 현상입니다. 드라이아이스가 녹지 않고 사라지는 것과 같아요. (1단계) 먼저 승화전사 색연필로 전사지에 그림을 그립니다. 아직은 종이 위에 있는 고체 잉크입니다. (2단계) 165도에서 60초 동안 누르면 잉크가 기체가 되어, 머그 겉에 입힌 얇은 코팅층 속으로 들어갑니다. (3단계) 식으면 잉크가 코팅 안에서 다시 굳어 갇힙니다. 겉에 묻은 것이 아니라 안에 들어간 것이라 문질러도 지워지지 않아요. (4단계) 그래서 이 코팅이 있는 승화용 머그에만 찍힙니다. 발문: '일반 도자기 컵에 하면 어떻게 될까?'">
+  data-notes="승화는 고체가 액체를 거치지 않고 바로 기체가 되는 현상입니다. 드라이아이스가 녹지 않고 사라지는 것과 같아요. (1단계) 먼저 승화 잉크 프린터로 전사지에 인쇄하거나, 승화전사 색연필로 그림을 그립니다. 아직은 종이 위에 있는 고체 잉크입니다. (2단계) 165도에서 60초 동안 누르면 잉크가 기체가 됩니다. 이때 머그 겉에 입힌 얇은 코팅(폴리에스터 같은 수지)도 열을 받아 틈이 벌어지고, 기체 잉크가 그 속으로 들어갑니다. (3단계) 식으면 코팅의 틈이 닫히고 잉크가 그 안에서 다시 굳어 갇힙니다. 겉에 묻은 것이 아니라 안에 들어간 것이라 문질러도 지워지지 않아요. (4단계) 그래서 이 코팅이 있는 승화용 머그에만 찍힙니다. 발문: '일반 도자기 컵에 하면 어떻게 될까?'">
   <div class="crumb">3. 승화전사기 › <b>1. 작동원리</b> · 승화</div>
   <div class="abs h2" style="left:100px;top:122px">잉크가 <span style="color:var(--heat)">기체</span>가 되어 코팅 속으로</div>
   <div class="card ms-c" data-s="1" style="left:100px">
@@ -41,7 +41,7 @@
       <rect y="150" width="460" height="40" style="fill:var(--coat)" opacity=".55"/><text class="ms-l" x="14" y="179" style="fill:#fff">코팅</text>
       <rect y="190" width="460" height="100" style="fill:var(--ceramic)"/><text class="ms-l" x="14" y="250">머그(도자기)</text>
     </svg>
-    <div class="abs ms-txt"><div class="h3"><span class="num">1</span>칠해요</div><div class="small">승화 색연필로 전사지에 그려요 — 아직 종이 위의 고체 잉크</div></div>
+    <div class="abs ms-txt"><div class="h3"><span class="num">1</span>칠해요</div><div class="small">승화 잉크로 인쇄하거나 승화 색연필로 그려요 — 아직 종이 위의 고체 잉크</div></div>
   </div>
   <div class="card ms-c" data-s="2" style="left:680px">
     <svg class="abs ms-pic" viewBox="0 0 460 300">
@@ -51,7 +51,7 @@
       <rect y="150" width="460" height="40" style="fill:var(--coat)" opacity=".55"/>
       <rect y="190" width="460" height="100" style="fill:var(--ceramic)"/>
     </svg>
-    <div class="abs ms-txt"><div class="h3"><span class="num">2</span>눌러요</div><div class="small">열을 받은 잉크가 기체가 되어 코팅 속으로 들어가요</div></div>
+    <div class="abs ms-txt"><div class="h3"><span class="num">2</span>눌러요</div><div class="small">잉크는 기체가 되고, 열을 받은 코팅은 틈이 벌어져 잉크를 받아들여요</div></div>
   </div>
   <div class="card ms-c" data-s="3" style="left:1260px">
     <svg class="abs ms-pic" viewBox="0 0 460 300">
@@ -60,7 +60,7 @@
       <g class="ms-dots" transform="translate(0 170)"></g>
       <rect y="190" width="460" height="100" style="fill:var(--ceramic)"/>
     </svg>
-    <div class="abs ms-txt"><div class="h3"><span class="num">3</span>식혀요</div><div class="small">코팅 안에서 다시 굳어 문질러도 안 지워져요</div></div>
+    <div class="abs ms-txt"><div class="h3"><span class="num">3</span>식혀요</div><div class="small">틈이 닫혀 잉크가 갇혀요 — 문질러도 안 지워져요</div></div>
   </div>
   <div class="banner" data-s="4" style="left:100px;top:930px;width:1720px;height:100px">그래서 승화 코팅된 머그에만 찍혀요</div>
 </section>
@@ -87,8 +87,60 @@ Deck.scene('m_sub', {
 });
 </script>
 
+<section class="slide" id="m_need" data-tile="graphite" data-title="꼭 필요한 네 가지"
+  data-notes="승화전사에 꼭 필요한 네 가지입니다. (1단계) 프린터: 열을 받으면 기체가 되는 승화 잉크를 넣은 잉크젯 프린터입니다. 집에서 쓰는 일반 잉크는 기체가 되지 않아 컵에 찍히지 않아요. 다른 잉크를 섞어 쓰면 노즐이 막히므로 승화 전용으로만 씁니다. 손으로 꾸밀 때는 프린터 대신 승화전사 색연필을 씁니다. (2단계) 전사지: 승화 잉크를 종이 속으로 빨아들이지 않고 겉에 붙잡아 두었다가, 열을 받으면 컵 쪽으로 내보내는 종이입니다. 인쇄한 면이 컵에 닿게 감아요. (3단계) 내열 테이프: 높은 열에도 녹거나 끈적이지 않는 테이프입니다. 누르는 동안 종이가 조금만 움직여도 그림이 겹쳐 흐려지므로 이음매와 위아래를 꼼꼼히 붙입니다. (4단계) 머그: 승화 코팅이 된 머그만 됩니다. 코팅이 열을 받아 열려야 잉크가 들어가니까요. 흰 바탕이어야 색이 제대로 보입니다. (5단계) 정리하면, 잉크와 머그가 일반 것이면 아예 찍히지 않고, 종이와 테이프가 맞지 않으면 흐려지거나 번집니다. 발문: '이 중 하나를 일반 것으로 바꾸면 어떻게 될까?' 참고: 승화나라(shnr.co.kr) 전사노하우·프린터관리법.">
+  <div class="crumb">3. 승화전사기 › <b>1. 작동원리</b> · 준비물</div>
+  <div class="abs h2" style="left:100px;top:122px">꼭 필요한 <span style="color:var(--dev)">네 가지</span></div>
+  <div class="card mn-c" data-s="1" style="left:100px">
+    <svg class="abs mn-pic" viewBox="0 0 328 150">
+      <rect x="74" y="10" width="180" height="22" rx="4" fill="#f5f5f7"/>
+      <rect x="34" y="30" width="260" height="76" rx="16" fill="#636366"/>
+      <rect x="64" y="88" width="200" height="8" rx="4" fill="#1d1d1f"/>
+      <rect x="74" y="96" width="180" height="50" fill="#f5f5f7"/>
+      <circle cx="130" cy="120" r="9" style="fill:var(--ink-a)"/><circle cx="164" cy="120" r="9" style="fill:var(--ink-b)"/><circle cx="198" cy="120" r="9" style="fill:var(--ink-c)"/>
+    </svg>
+    <div class="abs mn-txt"><div class="h3">승화 잉크 프린터</div>
+      <div class="small">열을 받으면 기체가 되는 잉크예요. 일반 잉크로는 안 찍혀요. 손으로는 승화 색연필로.</div></div>
+  </div>
+  <div class="card mn-c" data-s="2" style="left:540px">
+    <svg class="abs mn-pic" viewBox="0 0 328 150">
+      <path d="M84 8H244V142H84Z" fill="#f5f5f7"/>
+      <circle cx="146" cy="62" r="30" style="fill:var(--ink-a)" opacity=".8"/><circle cx="184" cy="84" r="30" style="fill:var(--ink-b)" opacity=".8"/>
+      <path d="M244 112L214 142H244Z" fill="#c7c7cc"/>
+    </svg>
+    <div class="abs mn-txt"><div class="h3">승화 전사지</div>
+      <div class="small">잉크를 종이 겉에 붙잡아 두었다가 열을 받으면 컵 쪽으로 내보내요. 인쇄면이 컵에 닿게.</div></div>
+  </div>
+  <div class="card mn-c" data-s="3" style="left:980px">
+    <svg class="abs mn-pic" viewBox="0 0 328 150">
+      <circle cx="120" cy="75" r="56" fill="none" stroke="#e5e5ea" stroke-width="26" opacity=".85"/>
+      <circle cx="120" cy="75" r="37" fill="none" stroke="#8e8e93" stroke-width="6"/>
+      <path d="M120 131H300V109H164" fill="#e5e5ea" opacity=".85"/>
+    </svg>
+    <div class="abs mn-txt"><div class="h3">내열 테이프</div>
+      <div class="small">높은 열에도 녹지 않아요. 종이가 조금만 움직여도 그림이 겹쳐 흐려지니 꼼꼼히 붙여요.</div></div>
+  </div>
+  <div class="card mn-c" data-s="4" style="left:1420px">
+    <svg class="abs mn-pic" viewBox="0 0 328 150">
+      <path d="M94 12H224V140H94Z" style="fill:var(--ceramic)"/>
+      <path d="M94 12H224V140H94Z" fill="none" style="stroke:var(--coat)" stroke-width="8"/>
+      <path d="M224 46C268 46 268 106 224 106" fill="none" style="stroke:var(--ceramic)" stroke-width="14"/>
+    </svg>
+    <div class="abs mn-txt"><div class="h3">승화 코팅 머그</div>
+      <div class="small">코팅이 열려야 잉크가 들어가요. 흰 바탕이어야 색이 제대로 보여요.</div></div>
+  </div>
+  <div class="banner" data-s="5" style="left:100px;top:900px;width:1720px;height:100px">잉크·머그가 일반 것이면 안 찍히고, 종이·테이프가 안 맞으면 흐려져요</div>
+</section>
+<style>
+#m_need .mn-c{top:290px;width:400px;height:570px}
+#m_need .mn-pic{left:36px;top:36px;width:328px;height:150px}
+#m_need .mn-txt{left:36px;top:220px;width:328px}
+#m_need .mn-txt .h3{font-size:38px;margin-bottom:14px}
+#m_need .mn-txt .small{color:var(--on-dark-2)}
+</style>
+
 <section class="slide" id="m_tip" data-tile="light" data-title="꼭 알아 둘 것 세 가지"
-  data-notes="(1단계) 찍히면 좌우가 뒤집힙니다. 전사지를 그림 면이 컵 쪽으로 가게 감기 때문이에요. 손으로 글씨를 쓰려면 거꾸로 써야 해서 어렵습니다. 그래서 빈 곳은 그림 위주로 꾸밉니다. (2단계) 승화 색연필은 칠할 때 흐려 보여도 열을 받으면 진해집니다. 진하게 칠하세요. (3단계) 끝나면 바로 전사지를 뗍니다. 오래 붙여 두면 남은 열로 잉크가 번져 흐려져요. 컵과 종이가 뜨거우니 내열 장갑을 낍니다. 발문: '글씨를 꼭 넣고 싶다면 어떻게 할까?'">
+  data-notes="(1단계) 찍히면 좌우가 뒤집힙니다. 전사지를 그림 면이 컵 쪽으로 가게 감기 때문이에요. 인쇄할 때는 프린터 설정의 좌우 반전(미러)을 켜면 됩니다. 손으로 글씨를 쓰려면 거꾸로 써야 해서 어렵기 때문에 손으로 꾸밀 때는 그림 위주로 합니다. (2단계) 승화 잉크는 인쇄하거나 칠했을 때 흐리고 탁해 보여도 열을 받으면 진해집니다. 색연필은 진하게 칠하세요. (3단계) 끝나면 바로 전사지를 뗍니다. 오래 붙여 두면 남은 열로 잉크가 번져 흐려져요. 뜨거운 컵끼리 붙여 두면 옆 컵에도 잉크가 조금 옮아 붙으니 떨어뜨려 식힙니다. 물에 담그면 깨질 수 있어요. 컵과 종이가 뜨거우니 내열 장갑을 낍니다. 발문: '글씨를 꼭 넣고 싶다면 어떻게 할까?'">
   <div class="crumb">3. 승화전사기 › <b>1. 작동원리</b> · 꼭 알아 둘 것</div>
   <div class="abs h2" style="left:100px;top:122px">꼭 알아 둘 것 <span style="color:var(--dev)">세 가지</span></div>
   <div class="card mt-c" data-s="1" style="left:100px">
@@ -100,16 +152,16 @@ Deck.scene('m_sub', {
       <path d="M420 80C470 80 470 160 420 160" fill="none" stroke="#d1d1d6" stroke-width="12"/>
       <text x="350" y="146" text-anchor="middle" class="mt-big" style="fill:var(--dmug)">가나</text>
     </svg>
-    <div class="abs mt-txt"><div class="h3">좌우가 뒤집혀요</div><div class="small">글씨는 거꾸로 써야 해요 → 그림 위주로 꾸며요</div></div>
+    <div class="abs mt-txt"><div class="h3">좌우가 뒤집혀요</div><div class="small">인쇄는 프린터의 좌우 반전을 켜요 · 손으로는 그림 위주로</div></div>
   </div>
   <div class="card mt-c" data-s="2" style="left:680px">
     <svg class="abs mt-pic" viewBox="0 0 460 240">
       <rect x="20" y="40" width="160" height="130" rx="20" style="fill:var(--ink-b)" opacity=".3"/>
       <rect x="280" y="40" width="160" height="130" rx="20" style="fill:var(--ink-b)"/>
       <path d="M200 105H254M240 89L258 105L240 121" fill="none" style="stroke:var(--ink-3)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
-      <text class="svg-note" x="100" y="216" text-anchor="middle">칠할 때</text><text class="svg-note" x="360" y="216" text-anchor="middle">찍힌 뒤</text>
+      <text class="svg-note" x="100" y="216" text-anchor="middle">인쇄·칠할 때</text><text class="svg-note" x="360" y="216" text-anchor="middle">찍힌 뒤</text>
     </svg>
-    <div class="abs mt-txt"><div class="h3">진하게 칠해요</div><div class="small">칠할 땐 흐려 보여도 열을 받으면 진해져요</div></div>
+    <div class="abs mt-txt"><div class="h3">흐려 보여도 진해져요</div><div class="small">열을 받아야 제 색이 나요 · 색연필은 진하게</div></div>
   </div>
   <div class="card mt-c" data-s="3" style="left:1260px">
     <svg class="abs mt-pic" viewBox="0 0 460 240">
@@ -118,7 +170,7 @@ Deck.scene('m_sub', {
       <circle cx="360" cy="105" r="62" style="fill:var(--ink-a)" filter="url(#mt-blur)" opacity=".75"/>
       <text class="svg-note" x="100" y="216" text-anchor="middle">바로 뗌</text><text class="svg-note" x="360" y="216" text-anchor="middle">늦게 뗌</text>
     </svg>
-    <div class="abs mt-txt"><div class="h3">끝나면 바로 떼요</div><div class="small">오래 두면 번져요 · 내열 장갑을 껴요</div></div>
+    <div class="abs mt-txt"><div class="h3">바로 떼고 띄워 식혀요</div><div class="small">오래 두면 번져요 · 컵끼리 붙이면 옆 컵에 묻어요</div></div>
   </div>
 </section>
 <style>

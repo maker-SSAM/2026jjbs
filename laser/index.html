@@ -70,7 +70,7 @@
 </style>
 
 <section class="slide" id="l_mode" data-tile="light" data-title="새기기와 자르기"
-  data-notes="레이저커터가 하는 일은 두 가지입니다. (1단계) 새기기, 스캔입니다. 약한 힘으로 빠르게, 프린터처럼 좌우로 왕복하며 면을 칠하듯 표면만 태웁니다. 도안에서 검정으로 그린 부분이에요. (2단계) 자르기, 컷입니다. 센 힘으로 천천히, 선을 따라가며 재료를 끝까지 태워 자릅니다. 도안의 빨강 선이에요. (3단계) 순서가 중요합니다. 먼저 자르면 조각이 움직여 새긴 자리가 어긋나요. 그래서 새기기를 먼저, 자르기를 나중에 합니다. 안쪽 구멍도 바깥 테두리보다 먼저 자릅니다. 발문: '이름표에서 새기기와 자르기는 각각 어디일까?'">
+  data-notes="레이저커터가 하는 일은 두 가지입니다. (1단계) 새기기, 스캔입니다. 약한 힘으로 빠르게, 프린터처럼 좌우로 왕복하며 닫힌 선의 안쪽을 칠하듯 표면만 태웁니다. 도안에서 검정으로 그린 부분이에요. (2단계) 자르기, 컷입니다. 센 힘으로 천천히, 선을 따라가며 재료를 끝까지 태워 자릅니다. 도안의 빨강 선이에요. (3단계) 순서가 중요합니다. 먼저 자르면 조각이 움직여 새긴 자리가 어긋나요. 그래서 새기기를 먼저, 자르기를 나중에 합니다. 안쪽 구멍도 바깥 테두리보다 먼저 자릅니다. 발문: '이름표에서 새기기와 자르기는 각각 어디일까?'">
   <div class="crumb">2. 레이저커터 › <b>1. 작동원리</b> · 하는 일 두 가지</div>
   <div class="abs h2" style="left:100px;top:122px"><span style="color:var(--scan)">새기기</span>와 <span style="color:var(--cut)">자르기</span></div>
   <div class="card lm-c" data-s="1" style="left:100px">
@@ -117,6 +117,87 @@ Deck.scene('l_mode', {
   }
 });
 </script>
+
+<section class="slide" id="l_layer" data-tile="dark" data-title="RDWorks: 값은 색에 붙어요"
+  data-notes="RDWorks에서 레이저가 어떻게 움직일지는 그림이 아니라 색에 정합니다. (1단계) 오른쪽 레이어 목록에 색마다 한 줄이 있고, 그 줄에 작업모드·속도·파워를 넣습니다. 검정은 스캔(새기기), 빨강은 컷(자르기). 값은 줄을 더블클릭해서 나오는 설정 창에서 고치고 확인을 눌러야 들어갑니다. 최소·최대 파워는 같은 값으로 둡니다. (2단계) 스캔은 닫힌 선의 안쪽을 채워 새깁니다. 바깥부터 한 겹씩 번갈아 칠해서, 테두리 띠와 글자는 칠해지고 글자 속 구멍은 비어요. 그런데 작업 화면에서는 스캔도 선으로만 보입니다. 꼭 미리보기로 확인하세요. (3단계) 순서는 위에서부터입니다. 스캔을 먼저, 컷을 맨 마지막에 두어야 자르는 동안 조각이 움직여도 새긴 자리가 어긋나지 않아요. (4단계) 그래서 시작 전에는 꼭 미리보기로 확인합니다. 발문: '같은 그림을 다른 속도로 새기려면 어떻게 할까?'">
+  <div class="crumb">2. 레이저커터 › <b>1. 작동원리</b> · RDWorks 레이어</div>
+  <div class="abs h2" style="left:100px;top:122px">값은 그림이 아니라 <span style="color:var(--dev)">색</span>에 붙어요</div>
+  <div class="card ly-panel" data-s="1">
+    <div class="ly-head"><span>순서</span><span>색</span><span>작업모드</span><span>속도</span><span>파워</span></div>
+    <div class="ly-row"><span class="ly-n">1</span><i style="background:#f5f5f7"></i><b>스캔</b><em></em><em></em></div>
+    <div class="ly-row"><span class="ly-n">2</span><i style="background:var(--cut)"></i><b>컷</b><em></em><em></em></div>
+    <div class="small ly-cap">줄을 <b>더블클릭</b> → 설정 창에서 고치고 <b>확인</b><br>최소·최대 파워는 같은 값으로</div>
+    <div class="ly-order" data-s="3">스캔 먼저 · 컷 마지막</div>
+  </div>
+  <div class="card ly-view" data-s="2" style="left:880px">
+    <span class="tag">작업 화면</span>
+    <svg class="abs ly-pic" viewBox="0 0 400 260">
+      <rect x="10" y="10" width="380" height="240" rx="40" fill="none" style="stroke:var(--cut)" stroke-width="4"/>
+      <rect x="30" y="30" width="340" height="200" rx="26" fill="none" stroke="#f5f5f7" stroke-width="3"/>
+      <rect x="48" y="48" width="304" height="164" rx="16" fill="none" stroke="#f5f5f7" stroke-width="3"/>
+      <text x="200" y="166" text-anchor="middle" class="ly-word" fill="none" stroke="#f5f5f7" stroke-width="3">우리반</text>
+    </svg>
+    <div class="abs small ly-note">스캔도 <b>선으로만</b> 보여요</div>
+  </div>
+  <div class="card ly-view" data-s="2" style="left:1360px">
+    <span class="tag is-action">미리보기</span>
+    <svg class="abs ly-pic" viewBox="0 0 400 260">
+      <rect x="10" y="10" width="380" height="240" rx="40" style="fill:var(--wood)"/>
+      <path d="M56 30H344A26 26 0 0 1 370 56V204A26 26 0 0 1 344 230H56A26 26 0 0 1 30 204V56A26 26 0 0 1 56 30ZM64 48A16 16 0 0 0 48 64V196A16 16 0 0 0 64 212H336A16 16 0 0 0 352 196V64A16 16 0 0 0 336 48Z" fill="#3a2a1a" fill-rule="evenodd"/>
+      <text x="200" y="166" text-anchor="middle" class="ly-word" fill="#3a2a1a">우리반</text>
+      <rect x="10" y="10" width="380" height="240" rx="40" fill="none" style="stroke:var(--cut)" stroke-width="4"/>
+    </svg>
+    <div class="abs small ly-note">띠·글자는 <b>칠해지고</b>, 글자 속 구멍은 비어요</div>
+  </div>
+  <div class="banner" data-s="4" style="left:100px;top:900px;width:1720px;height:100px">시작 전에 꼭 미리보기로 확인해요</div>
+</section>
+<style>
+#l_layer .ly-panel{left:100px;top:290px;width:740px;height:570px}
+#l_layer .ly-head,#l_layer .ly-row{display:grid;grid-template-columns:80px 70px 1fr 130px 130px;align-items:center;gap:16px}
+#l_layer .ly-head{font-size:28px;color:var(--on-dark-2);padding-bottom:14px;border-bottom:2px solid #48484a}
+#l_layer .ly-row{height:96px;border-bottom:2px solid #3a3a3c;font-size:36px}
+#l_layer .ly-n{display:flex;align-items:center;justify-content:center;width:52px;height:52px;border-radius:50%;background:#48484a;font-size:28px;font-weight:700}
+#l_layer .ly-row i{display:block;width:52px;height:52px;border-radius:12px}
+#l_layer .ly-row em{display:block;height:52px;border-radius:12px;background:#48484a}
+#l_layer .ly-cap{margin-top:30px;color:var(--on-dark-2)}
+#l_layer .ly-cap b{color:var(--on-dark)}
+#l_layer .ly-order{position:absolute;left:40px;right:40px;bottom:36px;padding:14px 0;border-radius:999px;background:var(--dev);color:#000;text-align:center;font-size:32px;font-weight:700}
+#l_layer .ly-view{top:290px;width:460px;height:570px}
+#l_layer .ly-pic{left:30px;top:110px;width:400px;height:260px}
+#l_layer .ly-note{left:40px;top:400px;width:380px;color:var(--on-dark-2)}
+#l_layer .ly-note b{color:var(--on-dark)}
+#l_layer .ly-word{font:800 92px var(--font)}
+</style>
+
+<section class="slide" id="l_file" data-tile="light" data-title="도안이 기계까지 가는 길"
+  data-notes="파일이 세 가지라 헷갈리기 쉽습니다. (1단계) DXF는 도안입니다. 그림과 색만 들어 있고 속도·파워는 없어요. 이름표 만들기에서 받은 DXF를 RDWorks로 가져오면 빨강은 자르기, 검정은 새기기 레이어로 나뉘어 열립니다. (2단계) RDWorks에서 색마다 값을 넣고 저장하면 RLD 파일이 됩니다. RDWorks의 원본이라 그림과 값이 함께 저장돼요. 값만 바꾸면 저장 메뉴가 꺼져 있을 수 있으니 그때는 다른 이름으로 저장합니다. (3단계) 기계로는 다운로드로 바로 보내거나, UFile로 저장해 RD 파일을 USB에 담아 기계에서 실행합니다. RD 파일에는 저장할 때의 값 한 벌만 담기므로, 값을 바꾸면 다시 저장해야 합니다. (4단계) DXF에는 값이 없으니, 값은 늘 RDWorks에서 넣습니다. 발문: '친구에게 값까지 넘겨주려면 어떤 파일을 줄까?'">
+  <div class="crumb">2. 레이저커터 › <b>1. 작동원리</b> · 파일</div>
+  <div class="abs h2" style="left:100px;top:122px">도안이 <span style="color:var(--dev)">기계</span>까지 가는 길</div>
+  <div class="card lf-c" data-s="1" style="left:100px">
+    <div class="lf-ext">.dxf</div><div class="h3">도안</div>
+    <ul class="lf-list"><li><b>그림과 색</b>만 있어요</li><li>속도·파워는 없어요</li><li>빨강 = 자르기<br>검정 = 새기기</li></ul>
+  </div>
+  <svg class="abs lf-arrow" data-s="2" style="left:640px" viewBox="0 0 80 80"><path d="M8 40H64M48 22L68 40L48 58" fill="none" style="stroke:var(--ink-3)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  <div class="card lf-c" data-s="2" style="left:700px">
+    <div class="lf-ext">.rld</div><div class="h3">RDWorks 원본</div>
+    <ul class="lf-list"><li>색마다 <b>값</b>을 넣어요</li><li>그림 + 값이 함께 저장</li><li>값만 바꿨으면<br>다른 이름으로 저장</li></ul>
+  </div>
+  <svg class="abs lf-arrow" data-s="3" style="left:1240px" viewBox="0 0 80 80"><path d="M8 40H64M48 22L68 40L48 58" fill="none" style="stroke:var(--ink-3)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  <div class="card lf-c" data-s="3" style="left:1300px">
+    <div class="lf-ext">.rd</div><div class="h3">기계로</div>
+    <ul class="lf-list"><li>「UFile로저장」→ USB<br>→ 기계에서 실행</li><li>또는 다운로드로 바로</li><li>값은 <b>한 벌</b>만 담겨요</li></ul>
+  </div>
+  <div class="banner" data-s="4" style="left:100px;top:900px;width:1720px;height:100px">DXF에는 값이 없어요 — 값은 RDWorks에서 넣어요</div>
+</section>
+<style>
+#l_file .lf-c{top:290px;width:520px;height:570px}
+#l_file .lf-ext{font-size:72px;font-weight:800;letter-spacing:-.02em;color:var(--dev);line-height:1.1}
+#l_file .h3{margin:10px 0 24px}
+#l_file .lf-list{margin:0;padding:0;list-style:none;font-size:30px;line-height:1.4;color:var(--ink-2)}
+#l_file .lf-list li{padding:14px 0;border-top:2px solid #e5e5ea}
+#l_file .lf-list b{color:var(--ink)}
+#l_file .lf-arrow{top:535px;width:60px;height:80px}
+</style>
 
 <section class="slide" id="c_sites" data-tile="parchment" data-title="유용한 사이트 모음"
   data-notes="레이저커터와 관련해 더 알아볼 수 있는 사이트입니다. 분야별로 모았고, 누르면 새 창으로 열립니다.">
