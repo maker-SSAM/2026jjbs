@@ -72,3 +72,13 @@
 .slide[data-tile="light"] .svg-label,.slide[data-tile="parchment"] .svg-label{fill:var(--ink)}
 .slide[data-tile="light"] .svg-note,.slide[data-tile="parchment"] .svg-note{fill:var(--ink-2)}
 .slide[data-tile="light"] .leader,.slide[data-tile="parchment"] .leader{stroke:var(--ink-3)}
+
+/* ── 유용한 사이트 모음: 분야(열)마다 사이트 버튼 ── */
+.cats{position:absolute;left:100px;right:100px;top:290px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:28px;align-items:start}
+.cat h3{display:flex;align-items:flex-start;gap:16px;min-height:64px;margin-bottom:12px;font-size:38px;font-weight:700;line-height:1.25;letter-spacing:-.01em}
+.cat h3 .n{flex:none;display:flex;align-items:center;justify-content:center;width:52px;height:52px;border-radius:50%;background:var(--dev);color:#fff;font-size:28px;font-weight:800}
+.cat a{display:flex;align-items:center;gap:20px;min-height:128px;margin-bottom:16px;padding:20px 28px;border-radius:28px;background:var(--c-white);color:var(--ink);transition:transform .15s}
+.cat a:hover{transform:translateY(-4px)}
+.cat a .t{flex:1;min-width:0;font-size:34px;font-weight:700;line-height:1.25}
+.cat a .t small{display:block;margin-top:4px;font-size:28px;font-weight:500;color:var(--ink-2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cat a .go{flex:none;font-size:36px;font-weight:700;color:var(--dev)}
