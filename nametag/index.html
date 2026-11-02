@@ -61,10 +61,10 @@
         const shell = ParametricCore.mountEditorShell(document.body, null, {
             sourceUrl: 'https://makerworld.com/ko/models/2640504-parametric-name-tag-keychain-with-korean-input#profileId-2917401',
             licenseType: 'BY-SA',
-            homeUrl: '../#laser'
+            homeUrl: '../laser/'
         });
         const homeLinkEl = document.querySelector('.home-link');
-        if (homeLinkEl) { homeLinkEl.textContent = '← 사용법'; homeLinkEl.removeAttribute('data-i18n-en'); }
+        if (homeLinkEl) { homeLinkEl.textContent = '← 레이저커터 슬라이드'; homeLinkEl.removeAttribute('data-i18n-en'); }
 
         const FONT_OPTIONS = FontList.OPTIONS; // 폰트 목록: assets/js/font-list.js
         const DEFAULT_FONT_INDEX = FONT_OPTIONS.findIndex(f => f.file === 'Cafe24PROUP.ttf');

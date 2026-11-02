@@ -127,3 +127,26 @@ table.tbl th { white-space: nowrap; }
   .noprint { display: none !important; }
   .card { break-inside: avoid; border-color: #ccc; }
 }
+
+/* ── 기기작동 매뉴얼(3d/ laser/ mug/ button/ 의 manual.html): 위에 붙는 길잡이 막대 ── */
+.mbar {
+  position: sticky; top: 0; z-index: 10;
+  display: flex; align-items: center; gap: 8px;
+  margin: 0 -16px; padding: 10px 16px;
+  background: var(--bg); border-bottom: 1px solid var(--line);
+}
+.mbar a {
+  display: inline-flex; align-items: center; min-height: 40px; padding: 6px 14px;
+  border-radius: 999px; background: var(--card); border: 1px solid var(--line);
+  color: var(--text); font-weight: 700; font-size: .92em; text-decoration: none;
+}
+.mbar a.home { background: var(--text); border-color: var(--text); color: var(--bg); }
+.mbar .sp { flex: 1; }
+.mbar .dot { width: 12px; height: 12px; border-radius: 50%; background: var(--dev); flex: none; }
+.dev { border-top: 6px solid var(--dev); }
+.dev > h2 { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.dev > h2 small { font-size: .62em; color: var(--muted); font-weight: 600; }
+details.trouble { border: 1px solid var(--line); border-radius: 10px; padding: 0 12px; margin: 8px 0; }
+details.trouble summary { padding: 10px 0; font-weight: 700; cursor: pointer; }
+details.trouble p { margin: 0 0 10px; }
+.top-link { display: block; text-align: right; font-size: .9em; margin-top: 10px; }

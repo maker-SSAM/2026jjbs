@@ -35,7 +35,7 @@
          type="module"로 만들어서 ManifoldCore.ready를 안전하게 await할 수 있게 했다. -->
     <script type="module" src="../assets/js/manifold-core.js"></script>
     <style>
-        /* 연수용: 사용법으로 돌아가는 버튼을 남겨 두어서, 좁은 머리줄에서 글자가 접히지 않게 한다 */
+        /* 연수용: 기기 슬라이드로 돌아가는 버튼을 남겨 두어서, 좁은 머리줄에서 글자가 접히지 않게 한다 */
         .home-link { white-space: nowrap; }
         .color-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
         .color-row span { font-size: 0.9em; color: var(--text-color); }
@@ -86,7 +86,7 @@
 
         // 행사용 독립 페이지: 메인 사이트로 나가는 홈 버튼은 없애고 초기화 버튼만 남긴다.
         const homeLinkEl = document.querySelector('.home-link');
-        if (homeLinkEl) { homeLinkEl.href = '../#3d'; homeLinkEl.textContent = '← 사용법'; homeLinkEl.removeAttribute('data-i18n-en'); }
+        if (homeLinkEl) { homeLinkEl.href = '../3d/'; homeLinkEl.textContent = '← 3D프린터 슬라이드'; homeLinkEl.removeAttribute('data-i18n-en'); }
         // 그 자리(머리줄 왼쪽)에는 행사장 페이지처럼 ★ 로고와 이름을 둔다.
         shell.controlsHeaderEl.insertAdjacentHTML('afterbegin',
             '<div class="fest-brand"><span class="fest-brand-mark">★</span>무한상상실</div>');

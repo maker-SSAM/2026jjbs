@@ -1,0 +1,74 @@
+/* jjbs.css — 무한상상실 연수 덱에만 쓰는 구성요소.
+   core.css·core.js·objects.js 는 Lecture-Notes(src/)의 강의 덱 엔진을 그대로 복사한 것(규칙은 그쪽 DESIGN.md).
+   무대 1920×1080 기준 px, 글자 28px 이상, 그림자 없음. */
+:root{
+  /* 기기 색(의미 색: 그 기기를 뜻할 때만) — 어두운 면 기본 */
+  --d3d:#4FA3FF; --dlaser:#FF7A45; --dmug:#C77DFF; --dbutton:#4CD07D; --dlink:#a1a1a6;
+  /* 레이저: 새기기(검정 선)·자르기(빨강 선) */
+  --scan:#f5f5f7; --cut:#FF453A;
+  /* 승화 잉크·코팅·세라믹, 버튼 금속 */
+  --ink-a:#FF5C8A; --ink-b:#64D2FF; --ink-c:#FFD60A;
+  --coat:#8E8EF0; --ceramic:#e5e5ea; --tin:#c7c7cc;
+}
+.slide[data-tile="light"],.slide[data-tile="parchment"]{--scan:#1d1d1f;--cut:#D70015;--d3d:#0066cc;--dlaser:#C4391B;--dmug:#8E24AA;--dbutton:#1E8B3E}
+
+/* 장면 위 작은 길잡이: "1. 3D프린터 › 2. 유용한 사이트 모음" */
+.crumb{position:absolute;left:100px;top:84px;font-size:30px;font-weight:600;color:var(--on-dark-2)}
+.crumb b{color:var(--dev);font-weight:700}
+.slide[data-tile="light"] .crumb,.slide[data-tile="parchment"] .crumb{color:var(--ink-2)}
+
+/* ── 기기 표지: 제목 + 4칸 차례 ── */
+.cover-dot{position:absolute;left:120px;top:150px;width:96px;height:96px;border-radius:50%;background:var(--dev)}
+.menu{position:absolute;left:120px;right:120px;top:640px;display:grid;grid-template-columns:repeat(4,1fr);gap:28px}
+.menu a{display:flex;flex-direction:column;justify-content:space-between;height:300px;padding:36px 36px 32px;border-radius:28px;
+  background:var(--c-graphite);color:var(--on-dark);transition:background .2s,transform .2s}
+.menu a:hover{background:#3a3a3d;transform:translateY(-6px)}
+.menu .n{display:flex;align-items:center;justify-content:center;width:72px;height:72px;border-radius:50%;background:var(--dev);color:#000;font-size:38px;font-weight:800}
+.menu .t{font-size:44px;font-weight:700;line-height:1.25;letter-spacing:-.01em}
+.menu .t small{display:block;margin-top:8px;font-size:28px;font-weight:500;color:var(--on-dark-2)}
+
+/* ── 유용한 사이트 모음: 아직 빈 버튼(선생님이 알려 주면 채움) ── */
+.sites{position:absolute;left:120px;right:120px;top:300px;display:grid;grid-template-columns:repeat(3,1fr);gap:28px}
+.sites a{display:flex;align-items:center;gap:24px;height:200px;padding:0 40px;border-radius:28px;background:var(--c-white);color:var(--ink);font-size:36px;font-weight:700}
+.sites a .i{flex:none;width:72px;height:72px;border-radius:20px;background:var(--dev);opacity:.9}
+.sites a small{display:block;font-size:28px;font-weight:500;color:var(--ink-2)}
+.sites a.empty{background:transparent;border:4px dashed #c7c7cc;color:var(--ink-3);cursor:default}
+.sites a.empty .i{background:#d1d1d6;opacity:1}
+
+/* ── 연수자료·매뉴얼: 큰 버튼 + QR ── */
+.res{position:absolute;display:flex;gap:44px;align-items:center;padding:44px 48px;border-radius:28px;background:var(--c-graphite);color:var(--on-dark)}
+.slide[data-tile="light"] .res{background:var(--c-parchment);color:var(--ink)}
+.res .txt{flex:1;min-width:0}
+.res .txt .h3{margin-bottom:12px}
+.res .txt p{font-size:30px;line-height:1.45;color:var(--on-dark-2)}
+.slide[data-tile="light"] .res .txt p{color:var(--ink-2)}
+.slide .res.empty{background:transparent;border:4px dashed #c7c7cc;color:var(--ink-3)}
+.slide[data-tile="light"] .res.empty .txt p{color:var(--ink-3)}
+.qrbox{flex:none;padding:18px;border-radius:24px;background:#fff;line-height:0}
+.qrbox img,.qrbox canvas{display:block}
+.go-btn{display:inline-flex;align-items:center;gap:16px;margin-top:28px;padding:22px 40px;border-radius:999px;background:var(--action);color:#fff!important;font-size:34px;font-weight:700}
+.slide[data-tile="dark"] .go-btn,.slide[data-tile="black"] .go-btn,.slide[data-tile="graphite"] .go-btn{background:var(--action-dark);color:#000!important}
+.go-btn:hover{filter:brightness(1.1)}
+.url{font-size:30px;font-weight:600;color:var(--on-dark-2);word-break:break-all}
+.slide[data-tile="light"] .url{color:var(--ink-2)}
+
+/* 오른쪽 설명 카드(번호 + 제목 + 한두 줄) */
+.step{position:absolute;display:flex;gap:22px;align-items:flex-start;padding:26px 32px;border-radius:28px;background:var(--c-graphite)}
+.slide[data-tile="light"] .step{background:var(--c-parchment)}
+.slide[data-tile="parchment"] .step{background:var(--c-white)}
+.step .h3{font-size:38px}
+.step .small{color:var(--on-dark-2)}
+.slide[data-tile="light"] .step .small,.slide[data-tile="parchment"] .step .small{color:var(--ink-2)}
+.slide[data-tile="light"] .num,.slide[data-tile="parchment"] .num{background:var(--action);color:#fff}
+
+/* 페이지마다 기기 색: <body class="d-3d"> → 장마다 --dev (밝은 면에서는 진한 색) */
+.d-3d .slide{--dev:var(--d3d)} .d-laser .slide{--dev:var(--dlaser)} .d-mug .slide{--dev:var(--dmug)}
+.d-button .slide{--dev:var(--dbutton)} .d-link .slide{--dev:var(--dlink)}
+
+/* 그림 재료 색: 나무(합판)·금속(버튼) — 밝은 면에서는 진하게 */
+:root{--wood:#C8A06A}
+.slide[data-tile="light"],.slide[data-tile="parchment"]{--tin:#8e8e93;--coat:#6E6EE0}
+/* 밝은 면의 그림 이름표(core.css 기본은 어두운 면용 흰 글씨) */
+.slide[data-tile="light"] .svg-label,.slide[data-tile="parchment"] .svg-label{fill:var(--ink)}
+.slide[data-tile="light"] .svg-note,.slide[data-tile="parchment"] .svg-note{fill:var(--ink-2)}
+.slide[data-tile="light"] .leader,.slide[data-tile="parchment"] .leader{stroke:var(--ink-3)}

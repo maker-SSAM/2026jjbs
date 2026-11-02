@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#000000">
+<meta name="deck-home" content="../">
+<title>4. 버튼만들기 · 무한상상실 기기 활용법</title>
+<link rel="stylesheet" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="../assets/deck/core.css">
+<link rel="stylesheet" href="../assets/deck/jjbs.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="../assets/deck/core.js"></script>
+<script src="../assets/deck/objects.js"></script>
+</head>
+<body class="d-button">
+<div id="viewport">
+  <div id="stage">
+
+<section class="slide" id="c_cover" data-tile="black" data-title="4. 버튼만들기 · 차례"
+  data-notes="버튼만들기 차례입니다. 작동원리, 유용한 사이트, 연수자료, 기기작동 매뉴얼 순서로 봅니다. 카드를 누르면 그 부분으로 바로 갑니다.">
+  <div class="abs eyebrow rise" style="left:120px;top:150px;--d:.1s">부설초등학교 교사연수 · 무한상상실 기기 활용법</div>
+  <div class="abs h1 rise" style="left:120px;top:206px;--d:.25s"><span style="color:var(--dev)">4.</span> 버튼만들기</div>
+  <div class="abs lead rise" style="left:120px;top:380px;--d:.4s">버튼제작기 × 1대</div>
+  <nav class="menu" aria-label="차례">
+    <a data-goto="b_layers"><span class="n">1</span><span class="t">작동원리<small>어떻게 만들어질까</small></span></a>
+    <a data-goto="c_sites"><span class="n">2</span><span class="t">유용한 사이트<small>더 알아보기</small></span></a>
+    <a data-goto="c_res"><span class="n">3</span><span class="t">연수자료<small>오늘 만들어 볼 것</small></span></a>
+    <a data-goto="c_manual"><span class="n">4</span><span class="t">기기작동 매뉴얼<small>휴대폰으로 보며 따라 하기</small></span></a>
+  </nav>
+</section>
+
+<section class="slide" id="b_layers" data-tile="light" data-title="버튼은 네 겹이에요"
+  data-notes="버튼(배지)은 네 겹으로 되어 있습니다. (1단계) 맨 위는 투명 필름입니다. 그림을 덮어 긁히거나 젖지 않게 지켜요. (2단계) 그 아래 내가 그린 도안입니다. 앞판보다 조금 크게 원으로 오려서, 가장자리가 앞판 뒤로 접혀 들어가게 합니다. (3단계) 앞판은 볼록한 금속 껍데기입니다. (4단계) 맨 아래 뒷판에는 옷에 꽂는 핀이 붙어 있어요. 기계는 이 네 겹을 두 번 눌러 하나로 잠급니다. 발문: '도안을 앞판과 똑같은 크기로 오리면 어떻게 될까?'">
+  <div class="crumb">4. 버튼만들기 › <b>1. 작동원리</b> · 버튼의 구조</div>
+  <div class="abs h2" style="left:100px;top:122px">버튼은 <span style="color:var(--dev)">네 겹</span>이에요</div>
+  <svg class="fullsvg" viewBox="0 0 1920 1080">
+    <path d="M300 360Q560 280 820 360L820 368Q560 288 300 368Z" style="fill:var(--fil)" opacity=".45"/>
+    <path d="M260 500Q560 410 860 500L860 512Q560 422 260 512Z" style="fill:var(--ink-a)"/>
+    <path d="M320 650Q560 560 800 650L800 700L780 700L780 658Q560 584 340 658L340 700L320 700Z" style="fill:var(--tin)"/>
+    <rect x="330" y="800" width="460" height="16" rx="8" style="fill:var(--tin)"/>
+    <path d="M390 846H730" style="stroke:var(--tin)" stroke-width="7" stroke-linecap="round"/>
+    <circle cx="390" cy="846" r="12" fill="none" style="stroke:var(--tin)" stroke-width="7"/>
+    <path d="M520 816V846M600 816V846" style="stroke:var(--tin)" stroke-width="7"/>
+    <g data-s="1"><path class="leader" d="M840 360H960"/><text class="svg-label" x="980" y="364">투명 필름</text><text class="svg-note" x="980" y="406">그림을 덮어 지켜요</text></g>
+    <g data-s="2"><path class="leader" d="M880 500H960"/><text class="svg-label" x="980" y="504">도안(내 그림)</text><text class="svg-note" x="980" y="546">앞판보다 조금 크게 원으로 오려요</text></g>
+    <g data-s="3"><path class="leader" d="M820 670H960"/><text class="svg-label" x="980" y="674">앞판</text><text class="svg-note" x="980" y="716">볼록한 금속 껍데기</text></g>
+    <g data-s="4"><path class="leader" d="M810 820H960"/><text class="svg-label" x="980" y="824">뒷판</text><text class="svg-note" x="980" y="866">옷에 꽂는 핀이 붙어 있어요</text></g>
+  </svg>
+</section>
+
+<section class="slide" id="b_press" data-tile="dark" data-title="두 번 누르면 완성"
+  data-notes="(1단계) 첫 번째 누르기입니다. 앞판을 볼록한 면이 위로 가게 놓고, 그 위에 도안을 그림이 위로, 그 위에 필름을 올립니다. 레버를 끝까지 누르면 세 겹이 위 틀 안으로 들어가고 가장자리가 접힙니다. (2단계) 두 번째 누르기입니다. 틀을 돌려 반대쪽 칸에 뒷판을 핀이 아래로 가게 놓고 다시 끝까지 누르면, 앞판 가장자리가 뒷판 안쪽으로 말려 들어가 잠깁니다. (3단계) 기계마다 틀을 돌리는 방향과 순서가 조금 다를 수 있으니 기계에 붙은 그림 설명을 따릅니다. 발문: '핀 방향과 그림의 위아래는 언제 맞춰야 할까?'">
+  <div class="crumb">4. 버튼만들기 › <b>1. 작동원리</b> · 기계가 하는 일</div>
+  <div class="abs h2" style="left:100px;top:122px"><span style="color:var(--dev)">두 번</span> 누르면 완성</div>
+  <div class="card bp-c" data-s="1" style="left:100px">
+    <svg class="abs bp-pic" viewBox="0 0 740 330">
+      <rect x="220" y="0" width="300" height="80" rx="12" fill="#48484a"/><rect x="290" y="62" width="160" height="18" rx="4" fill="#2c2c2e"/>
+      <path d="M370 96V140M352 124L370 144L388 124" fill="none" style="stroke:var(--on-dark-2)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M270 186Q370 156 470 186L470 190Q370 160 270 190Z" style="fill:var(--fil)" opacity=".6"/>
+      <path d="M262 206Q370 172 478 206L478 212Q370 178 262 212Z" style="fill:var(--ink-a)"/>
+      <path d="M280 236Q370 204 460 236L460 256L450 256L450 240Q370 214 290 240L290 256L280 256Z" style="fill:var(--tin)"/>
+      <rect x="200" y="256" width="340" height="60" rx="12" fill="#3a3a3c"/>
+      <text class="svg-note" x="560" y="220">필름</text><text class="svg-note" x="560" y="256">도안</text><text class="svg-note" x="560" y="292">앞판</text>
+    </svg>
+    <div class="abs bp-txt"><div class="h3"><span class="num">1</span>첫 번째 누르기</div><div class="small">앞판(볼록 면 위) → 도안(그림 위) → 필름을 올리고 꾹! 세 겹이 위 틀 안으로 들어가요</div></div>
+  </div>
+  <div class="card bp-c" data-s="2" style="left:980px">
+    <svg class="abs bp-pic" viewBox="0 0 740 330">
+      <rect x="220" y="0" width="300" height="110" rx="12" fill="#48484a"/>
+      <path d="M280 108Q370 70 460 108Z" style="fill:var(--tin)"/><path d="M276 108Q370 64 464 108" fill="none" style="stroke:var(--ink-a)" stroke-width="5"/>
+      <path d="M370 126V170M352 154L370 174L388 154" fill="none" style="stroke:var(--on-dark-2)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+      <rect x="290" y="230" width="160" height="12" rx="6" style="fill:var(--tin)"/>
+      <path d="M310 250H430" style="stroke:var(--tin)" stroke-width="5" stroke-linecap="round"/>
+      <rect x="200" y="256" width="340" height="60" rx="12" fill="#3a3a3c"/>
+      <text class="svg-note" x="560" y="80">앞판·도안·필름</text><text class="svg-note" x="560" y="246">뒷판(핀 아래)</text>
+    </svg>
+    <div class="abs bp-txt"><div class="h3"><span class="num">2</span>두 번째 누르기</div><div class="small">틀을 돌려 뒷판 위에서 다시 꾹! 가장자리가 안으로 말려 잠겨요</div></div>
+  </div>
+  <div class="banner" data-s="3" style="left:100px;top:930px;width:1720px;height:100px">틀 방향·순서는 우리 기계에 붙은 그림을 따라요</div>
+</section>
+<style>
+#b_press .bp-c{top:290px;width:840px;height:600px}
+#b_press .bp-pic{left:50px;top:40px;width:740px;height:330px}
+#b_press .bp-txt{left:40px;top:400px;width:760px}
+#b_press .bp-txt .h3{display:flex;align-items:center;gap:16px;margin-bottom:14px}
+#b_press .bp-txt .small{color:var(--on-dark-2)}
+</style>
+
+<section class="slide" id="c_sites" data-tile="parchment" data-title="유용한 사이트 모음"
+  data-notes="버튼만들기와 관련해 더 알아볼 수 있는 사이트입니다. (사이트는 준비 중)">
+  <div class="crumb">4. 버튼만들기 › <b>2. 유용한 사이트 모음</b></div>
+  <div class="abs h2" style="left:100px;top:122px">유용한 사이트 모음</div>
+  <!-- 빈 버튼: 사이트가 정해지면 class="empty"·aria-disabled 를 빼고 href·target="_blank" 를 넣는다 -->
+  <div class="sites">
+    <a class="empty" aria-disabled="true"><span class="i"></span><span>사이트 1<small>준비 중</small></span></a>
+    <a class="empty" aria-disabled="true"><span class="i"></span><span>사이트 2<small>준비 중</small></span></a>
+    <a class="empty" aria-disabled="true"><span class="i"></span><span>사이트 3<small>준비 중</small></span></a>
+    <a class="empty" aria-disabled="true"><span class="i"></span><span>사이트 4<small>준비 중</small></span></a>
+    <a class="empty" aria-disabled="true"><span class="i"></span><span>사이트 5<small>준비 중</small></span></a>
+    <a class="empty" aria-disabled="true"><span class="i"></span><span>사이트 6<small>준비 중</small></span></a>
+  </div>
+</section>
+
+<section class="slide" id="c_res" data-tile="light" data-title="연수자료"
+  data-notes="오늘 연수에서 직접 만들어 볼 자료입니다.">
+  <div class="crumb">4. 버튼만들기 › <b>3. 연수자료</b></div>
+  <div class="abs h2" style="left:100px;top:122px">연수자료</div>
+  <div class="res empty" style="left:120px;top:300px;width:1680px">
+    <div class="txt"><div class="h3">버튼 도안</div><p>준비 중이에요.</p></div>
+  </div>
+</section>
+
+<section class="slide" id="c_manual" data-tile="dark" data-title="기기작동 매뉴얼"
+  data-notes="기기작동 매뉴얼은 슬라이드가 아니라 아래로 내려 보는 한 페이지입니다. QR을 찍어 각자 휴대폰으로 보면서 기기 앞에서 따라 하세요.">
+  <div class="crumb">4. 버튼만들기 › <b>4. 기기작동 매뉴얼</b></div>
+  <div class="abs h2" style="left:100px;top:122px">기기작동 매뉴얼</div>
+  <div class="res" style="left:120px;top:300px;width:1680px;height:620px">
+    <div class="txt"><div class="h3">휴대폰으로 보며 따라 해요</div>
+      <p>QR을 찍으면 한 페이지 매뉴얼이 열려요.<br>준비물 · 사용 순서 5단계 · 문제 해결</p>
+      <a class="go-btn" href="manual.html">매뉴얼 열기 →</a>
+      <p class="url" style="margin-top:28px">maker-ssam.github.io/2026jjbs/button/manual.html</p></div>
+    <div class="qrbox"><div data-qr="https://maker-ssam.github.io/2026jjbs/button/manual.html" data-size="460"></div></div>
+  </div>
+</section>
+
+  </div>
+</div>
+<script src="../assets/deck/jjbs.js"></script>
+<script>JJ.start();</script>
+<!-- 방문 집계: Cloudflare Web Analytics(쿠키 없음). 실제 주소에서만 불러와 로컬 미리보기는 세지 않는다 -->
+<script>if(location.hostname==='maker-ssam.github.io'){var s=document.createElement('script');s.defer=true;s.src='https://static.cloudflareinsights.com/beacon.min.js';s.setAttribute('data-cf-beacon','{"token": "50978c2fd5224087936fd5e326e45675"}');document.body.appendChild(s);}</script>
+</body>
+</html>

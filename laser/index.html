@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#000000">
+<meta name="deck-home" content="../">
+<title>2. 레이저커터 · 무한상상실 기기 활용법</title>
+<link rel="stylesheet" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="../assets/deck/core.css">
+<link rel="stylesheet" href="../assets/deck/jjbs.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="../assets/deck/core.js"></script>
+<script src="../assets/deck/objects.js"></script>
+</head>
+<body class="d-laser">
+<div id="viewport">
+  <div id="stage">
+
+<section class="slide" id="c_cover" data-tile="black" data-title="2. 레이저커터 · 차례"
+  data-notes="레이저커터 차례입니다. 작동원리, 유용한 사이트, 연수자료, 기기작동 매뉴얼 순서로 봅니다. 카드를 누르면 그 부분으로 바로 갑니다.">
+  <div class="abs eyebrow rise" style="left:120px;top:150px;--d:.1s">부설초등학교 교사연수 · 무한상상실 기기 활용법</div>
+  <div class="abs h1 rise" style="left:120px;top:206px;--d:.25s"><span style="color:var(--dev)">2.</span> 레이저커터</div>
+  <div class="abs lead rise" style="left:120px;top:380px;--d:.4s">데이비드레이저 DV-7045 × 1대 · 프로그램 RDWorks</div>
+  <nav class="menu" aria-label="차례">
+    <a data-goto="l_beam"><span class="n">1</span><span class="t">작동원리<small>어떻게 만들어질까</small></span></a>
+    <a data-goto="c_sites"><span class="n">2</span><span class="t">유용한 사이트<small>더 알아보기</small></span></a>
+    <a data-goto="c_res"><span class="n">3</span><span class="t">연수자료<small>오늘 만들어 볼 것</small></span></a>
+    <a data-goto="c_manual"><span class="n">4</span><span class="t">기기작동 매뉴얼<small>휴대폰으로 보며 따라 하기</small></span></a>
+  </nav>
+</section>
+
+<section class="slide" id="l_beam" data-tile="dark" data-title="레이저 빛을 한 점에 모아요"
+  data-notes="(1단계) 레이저커터 뒤쪽 긴 통이 레이저관입니다. 이산화탄소 가스로 눈에 보이지 않는 강한 빛, 적외선을 만들어요. (2단계) 이 빛은 곧게만 나가기 때문에 거울 세 개가 빛을 꺾어서 움직이는 헤드까지 보냅니다. (3단계) 헤드 안의 렌즈가 빛을 아주 작은 한 점, 초점에 모읍니다. 돋보기로 햇빛을 모아 종이를 태우는 것과 같아요. 그래서 재료를 태우거나 녹여 새기고 자를 수 있습니다. (4단계) 실제로 불이 붙는 기계이므로 작동 중에는 자리를 비우지 않습니다. 발문: '초점이 재료 표면에서 벗어나면 어떻게 될까?'">
+  <div class="crumb">2. 레이저커터 › <b>1. 작동원리</b> · 빛의 길</div>
+  <div class="abs h2" style="left:100px;top:122px">레이저 빛을 <span style="color:var(--cut)">한 점</span>에 모아 태워요</div>
+  <svg class="fullsvg" viewBox="0 0 1920 1080">
+    <defs><radialGradient id="l-glow"><stop offset="0" style="stop-color:var(--heat)" stop-opacity=".95"/><stop offset="1" style="stop-color:var(--heat)" stop-opacity="0"/></radialGradient></defs>
+    <rect x="100" y="368" width="420" height="64" rx="32" fill="#3a3a3c"/>
+    <path d="M136 400H484" style="stroke:var(--cut)" stroke-width="10" stroke-linecap="round" opacity=".55"/>
+    <path class="l-beam" d="M520 400H720V620H960V700" fill="none" style="stroke:var(--cut)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M696 376L744 424M696 596L744 644" style="stroke:var(--metal)" stroke-width="12" stroke-linecap="round"/>
+    <rect x="920" y="586" width="80" height="70" rx="10" fill="#48484a"/>
+    <path d="M936 596L984 644" style="stroke:var(--metal)" stroke-width="12" stroke-linecap="round"/>
+    <path d="M926 656H994L976 770H944Z" fill="#3a3a3c"/>
+    <path d="M928 704H992L960 820Z" style="fill:var(--cut)" opacity=".4"/>
+    <ellipse cx="960" cy="700" rx="38" ry="11" style="fill:var(--fil)" opacity=".85"/>
+    <rect x="700" y="820" width="520" height="38" rx="6" style="fill:var(--wood)"/>
+    <circle class="l-focus" cx="960" cy="820" r="44" fill="url(#l-glow)"/>
+    <g data-s="1"><text class="svg-label" x="310" y="482" text-anchor="middle">레이저관(CO₂)</text></g>
+    <g data-s="2"><text class="svg-label" x="760" y="368">거울 ①</text><text class="svg-label" x="680" y="660" text-anchor="end">거울 ②</text>
+      <path class="leader" d="M1000 610H1060"/><text class="svg-label" x="1072" y="620">헤드(거울 ③)</text></g>
+    <g data-s="3"><path class="leader" d="M998 700H1060"/><text class="svg-label" x="1072" y="710">렌즈</text>
+      <path class="leader" d="M1004 820L1060 800"/><text class="svg-label" x="1072" y="810" style="fill:var(--heat)">초점</text>
+      <text class="svg-note" x="960" y="910" text-anchor="middle">합판 · MDF · 아크릴 · 종이 · 펠트</text></g>
+  </svg>
+  <div class="step" data-s="1" style="left:1290px;top:290px;width:530px;height:160px"><span class="num">1</span>
+    <div><div class="h3">빛 만들기</div><div class="small">눈에 안 보이는 강한 빛(적외선)을 만들어요</div></div></div>
+  <div class="step" data-s="2" style="left:1290px;top:470px;width:530px;height:160px"><span class="num">2</span>
+    <div><div class="h3">빛 보내기</div><div class="small">거울 3개가 빛을 꺾어 헤드까지 보내요</div></div></div>
+  <div class="step" data-s="3" style="left:1290px;top:650px;width:530px;height:160px"><span class="num">3</span>
+    <div><div class="h3">빛 모으기</div><div class="small">렌즈가 한 점에 모아 태우거나 녹여요</div></div></div>
+  <div class="banner" data-s="4" style="left:100px;top:950px;width:1720px;height:90px;font-size:42px">불이 붙을 수 있어요 — 작동 중에는 자리를 비우지 않아요</div>
+</section>
+<style>
+#l_beam .l-beam{stroke-dasharray:26 16;animation:l-flow .6s linear infinite}
+#l_beam .l-focus{animation:l-pulse 1.4s ease-in-out infinite}
+@keyframes l-flow{to{stroke-dashoffset:-42}}
+@keyframes l-pulse{50%{opacity:.45}}
+</style>
+
+<section class="slide" id="l_mode" data-tile="light" data-title="새기기와 자르기"
+  data-notes="레이저커터가 하는 일은 두 가지입니다. (1단계) 새기기, 스캔입니다. 약한 힘으로 빠르게, 프린터처럼 좌우로 왕복하며 면을 칠하듯 표면만 태웁니다. 도안에서 검정으로 그린 부분이에요. (2단계) 자르기, 컷입니다. 센 힘으로 천천히, 선을 따라가며 재료를 끝까지 태워 자릅니다. 도안의 빨강 선이에요. (3단계) 순서가 중요합니다. 먼저 자르면 조각이 움직여 새긴 자리가 어긋나요. 그래서 새기기를 먼저, 자르기를 나중에 합니다. 안쪽 구멍도 바깥 테두리보다 먼저 자릅니다. 발문: '이름표에서 새기기와 자르기는 각각 어디일까?'">
+  <div class="crumb">2. 레이저커터 › <b>1. 작동원리</b> · 하는 일 두 가지</div>
+  <div class="abs h2" style="left:100px;top:122px"><span style="color:var(--scan)">새기기</span>와 <span style="color:var(--cut)">자르기</span></div>
+  <div class="card lm-c" data-s="1" style="left:100px">
+    <span class="tag">새기기 · Scan</span>
+    <svg class="abs lm-pic" viewBox="0 0 320 320">
+      <defs><clipPath id="lm-star"><path d="M160 30L196 118L290 122L216 182L242 274L160 222L78 274L104 182L30 122L124 118Z"/></clipPath></defs>
+      <rect width="320" height="320" rx="24" style="fill:var(--wood)"/>
+      <path d="M160 30L196 118L290 122L216 182L242 274L160 222L78 274L104 182L30 122L124 118Z" fill="none" style="stroke:var(--scan)" stroke-opacity=".25" stroke-width="2" stroke-dasharray="6 6"/>
+      <g clip-path="url(#lm-star)" id="lm-rows"></g>
+    </svg>
+    <div class="abs lm-txt"><b>표면만 태워요</b><span>약한 힘 · 빠르게</span><span>좌우로 왕복하며 칠하듯</span><span>도안의 <em style="color:var(--scan)">검정</em> 부분</span></div>
+  </div>
+  <div class="card lm-c" data-s="2" style="left:980px">
+    <span class="tag" style="background:var(--cut)">자르기 · Cut</span>
+    <svg class="abs lm-pic" viewBox="0 0 320 320">
+      <rect width="320" height="320" rx="24" style="fill:var(--wood)"/>
+      <circle cx="160" cy="160" r="110" fill="none" style="stroke:var(--cut)" stroke-opacity=".25" stroke-width="2" stroke-dasharray="6 6"/>
+      <circle class="lm-cut" cx="160" cy="160" r="110" fill="none" style="stroke:var(--cut)" stroke-width="7" stroke-linecap="round" pathLength="100" transform="rotate(-90 160 160)"/>
+    </svg>
+    <div class="abs lm-txt"><b>끝까지 잘라요</b><span>센 힘 · 천천히</span><span>선을 따라 한 바퀴</span><span>도안의 <em style="color:var(--cut)">빨강</em> 선</span></div>
+  </div>
+  <div class="banner" data-s="3" style="left:100px;top:930px;width:1720px;height:100px">새기기 먼저, 자르기 나중 — 먼저 자르면 조각이 움직여요</div>
+</section>
+<style>
+#l_mode .lm-c{top:290px;width:840px;height:600px}
+#l_mode .lm-pic{left:40px;top:120px;width:400px;height:400px}
+#l_mode .lm-txt{left:480px;top:140px;width:320px;font-size:32px;line-height:1.5;color:var(--ink-2)}
+#l_mode .lm-txt b{display:block;color:var(--ink);font-size:40px;margin-bottom:18px}
+#l_mode .lm-txt span{display:block;margin-bottom:8px}
+#l_mode .lm-txt em{font-style:normal;font-weight:700}
+#l_mode .lm-row{opacity:0}
+#l_mode.ge1 .lm-row{opacity:1;animation:lm-row 4.2s linear infinite;animation-delay:calc(var(--i) * 140ms)}
+@keyframes lm-row{0%{opacity:0}4%,80%{opacity:1}92%,100%{opacity:0}}
+#l_mode .lm-cut{stroke-dasharray:0 100}
+#l_mode.ge2 .lm-cut{stroke-dasharray:100 0;animation:lm-cut 4.2s ease-in-out infinite}
+@keyframes lm-cut{0%{stroke-dasharray:0 100}70%,88%{stroke-dasharray:100 0}100%{stroke-dasharray:100 0;opacity:0}}
+</style>
+<script>
+Deck.scene('l_mode', {
+  build(root) {
+    let g = '';
+    for (let i = 0; i < 22; i++) g += `<rect class="lm-row" style="--i:${i};fill:var(--scan)" x="20" y="${30 + i * 11}" width="280" height="8"/>`;
+    root.querySelector('#lm-rows').innerHTML = g;
+  }
+});
+</script>
+
+<section class="slide" id="c_sites" data-tile="parchment" data-title="유용한 사이트 모음"
+  data-notes="레이저커터와 관련해 더 알아볼 수 있는 사이트입니다. (사이트는 준비 중)">
+  <div class="crumb">2. 레이저커터 › <b>2. 유용한 사이트 모음</b></div>
+  <div class="abs h2" style="left:100px;top:122px">유용한 사이트 모음</div>
+  <!-- 빈 버튼: 사이트가 정해지면 class="empty"·aria-disabled 를 빼고 href·target="_blank" 를 넣는다 -->
+  <div class="sites">
+    <a class="empty" aria-disabled="true"><span class="i"></span><span>사이트 1<small>준비 중</small></span></a>
+    <a class="empty" aria-disabled="true"><span class="i"></span><span>사이트 2<small>준비 중</small></span></a>
+    <a class="empty" aria-disabled="true"><span class="i"></span><span>사이트 3<small>준비 중</small></span></a>
+    <a class="empty" aria-disabled="true"><span class="i"></span><span>사이트 4<small>준비 중</small></span></a>
+    <a class="empty" aria-disabled="true"><span class="i"></span><span>사이트 5<small>준비 중</small></span></a>
+    <a class="empty" aria-disabled="true"><span class="i"></span><span>사이트 6<small>준비 중</small></span></a>
+  </div>
+</section>
+
+<section class="slide" id="c_res" data-tile="light" data-title="연수자료"
+  data-notes="오늘 연수에서 직접 만들어 볼 자료입니다.">
+  <div class="crumb">2. 레이저커터 › <b>3. 연수자료</b></div>
+  <div class="abs h2" style="left:100px;top:122px">연수자료</div>
+  <div class="res" style="left:120px;top:300px;width:1680px">
+    <div class="txt"><div class="h3">이름표 만들기</div><p>글자·이모지만 넣으면 이름표 도안(DXF)이 나와요.<br>여러 명 파일은 RDWorks에서 차례로 가져와 한 판에 늘어놓아요.</p>
+      <a class="go-btn" href="../nametag/">이름표 만들기 →</a></div>
+    <div class="qrbox"><div data-qr="https://maker-ssam.github.io/2026jjbs/nametag/" data-size="280"></div></div>
+  </div>
+</section>
+
+<section class="slide" id="c_manual" data-tile="dark" data-title="기기작동 매뉴얼"
+  data-notes="기기작동 매뉴얼은 슬라이드가 아니라 아래로 내려 보는 한 페이지입니다. QR을 찍어 각자 휴대폰으로 보면서 기기 앞에서 따라 하세요.">
+  <div class="crumb">2. 레이저커터 › <b>4. 기기작동 매뉴얼</b></div>
+  <div class="abs h2" style="left:100px;top:122px">기기작동 매뉴얼</div>
+  <div class="res" style="left:120px;top:300px;width:1680px;height:620px">
+    <div class="txt"><div class="h3">휴대폰으로 보며 따라 해요</div>
+      <p>QR을 찍으면 한 페이지 매뉴얼이 열려요.<br>켜는 순서 · 작업 10단계 · 끄는 순서 · 설정값 · 문제 해결</p>
+      <a class="go-btn" href="manual.html">매뉴얼 열기 →</a>
+      <p class="url" style="margin-top:28px">maker-ssam.github.io/2026jjbs/laser/manual.html</p></div>
+    <div class="qrbox"><div data-qr="https://maker-ssam.github.io/2026jjbs/laser/manual.html" data-size="460"></div></div>
+  </div>
+</section>
+
+  </div>
+</div>
+<script src="../assets/deck/jjbs.js"></script>
+<script>JJ.start();</script>
+<!-- 방문 집계: Cloudflare Web Analytics(쿠키 없음). 실제 주소에서만 불러와 로컬 미리보기는 세지 않는다 -->
+<script>if(location.hostname==='maker-ssam.github.io'){var s=document.createElement('script');s.defer=true;s.src='https://static.cloudflareinsights.com/beacon.min.js';s.setAttribute('data-cf-beacon','{"token": "50978c2fd5224087936fd5e326e45675"}');document.body.appendChild(s);}</script>
+</body>
+</html>

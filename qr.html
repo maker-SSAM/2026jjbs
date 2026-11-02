@@ -31,10 +31,10 @@
 <body>
 <div class="wrap">
   <div class="noprint">
-    <a class="back" href="./">← 기기 사용법</a>
+    <a class="back" href="./">← 메인으로</a>
     <header class="top">
       <h1>기기 옆 QR 붙임 종이</h1>
-      <p>A4로 인쇄해 잘라서 기기 옆에 붙이세요. 휴대폰으로 찍으면 그 기기 사용법이 바로 열려요.</p>
+      <p>A4로 인쇄해 잘라서 기기 옆에 붙이세요. 휴대폰으로 찍으면 그 기기 매뉴얼이 바로 열려요.</p>
     </header>
     <p><button class="btn" onclick="print()">인쇄하기</button></p>
   </div>
@@ -45,15 +45,15 @@ const BASE = 'https://maker-ssam.github.io/2026jjbs/';
 const DEVICES = [
   { id: '3d', name: '3D프린터', color: 'var(--c3d)' },
   { id: 'laser', name: '레이저커터', color: 'var(--claser)' },
-  { id: 'mug', name: '승화전사 머그', color: 'var(--cmug)' },
-  { id: 'button', name: '버튼제작기', color: 'var(--cbutton)' }
+  { id: 'mug', name: '승화전사기', color: 'var(--cmug)' },
+  { id: 'button', name: '버튼만들기', color: 'var(--cbutton)' }
 ];
 for (const d of DEVICES) {
-  const url = BASE + '#' + d.id;
+  const url = BASE + d.id + '/manual.html';
   const box = document.createElement('div');
   box.className = 'qr';
   box.style.setProperty('--dev', d.color);
-  box.innerHTML = `<h2>${d.name}</h2><p>사용법 · 안전 수칙 · 문제 해결</p><div class="code"></div><small>${url}</small>`;
+  box.innerHTML = `<h2>${d.name}</h2><p>기기작동 매뉴얼 · 안전 수칙 · 문제 해결</p><div class="code"></div><small>${url}</small>`;
   document.getElementById('sheet').append(box);
   new QRCode(box.querySelector('.code'), { text: url, width: 400, height: 400, correctLevel: QRCode.CorrectLevel.M });
 }

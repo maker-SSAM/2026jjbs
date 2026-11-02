@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#000000">
+<meta name="deck-home" content="../">
+<title>1. 3D프린터 · 무한상상실 기기 활용법</title>
+<link rel="stylesheet" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="../assets/deck/core.css">
+<link rel="stylesheet" href="../assets/deck/jjbs.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="../assets/deck/core.js"></script>
+<script src="../assets/deck/objects.js"></script>
+</head>
+<body class="d-3d">
+<div id="viewport">
+  <div id="stage">
+
+<section class="slide" id="c_cover" data-tile="black" data-title="1. 3D프린터 · 차례"
+  data-notes="3D프린터 차례입니다. 작동원리, 유용한 사이트, 연수자료, 기기작동 매뉴얼 순서로 봅니다. 카드를 누르면 그 부분으로 바로 갑니다.">
+  <div class="abs eyebrow rise" style="left:120px;top:150px;--d:.1s">부설초등학교 교사연수 · 무한상상실 기기 활용법</div>
+  <div class="abs h1 rise" style="left:120px;top:206px;--d:.25s"><span style="color:var(--dev)">1.</span> 3D프린터</div>
+  <div class="abs lead rise" style="left:120px;top:380px;--d:.4s">큐비콘 Style Plus (A15CR) × 5대 · 슬라이서 큐비크리에이터</div>
+  <nav class="menu" aria-label="차례">
+    <a data-goto="s03_additive"><span class="n">1</span><span class="t">작동원리<small>어떻게 만들어질까</small></span></a>
+    <a data-goto="c_sites"><span class="n">2</span><span class="t">유용한 사이트<small>더 알아보기</small></span></a>
+    <a data-goto="c_res"><span class="n">3</span><span class="t">연수자료<small>오늘 만들어 볼 것</small></span></a>
+    <a data-goto="c_manual"><span class="n">4</span><span class="t">기기작동 매뉴얼<small>휴대폰으로 보며 따라 하기</small></span></a>
+  </nav>
+</section>
+<section class="slide" id="s03_additive" data-tile="light" data-title="절삭·사출·적층"
+  data-notes="같은 꽃병을 만드는 세 가지 방법을 비교합니다. (1단계) 먼저 깎아내는 방법, 절삭입니다. 덩어리에서 필요 없는 부분을 깎아 냅니다. 튼튼하고 매끈하며 정밀하게 만들 수 있지만, 부스러기가 많이 남고 안이 빈 복잡한 모양은 만들기 어렵습니다. (2단계) 둘째, 사출입니다. 녹인 플라스틱을 틀, 즉 금형에 밀어 넣어 굳힙니다. 우리 주변 플라스틱 물건 대부분이 이렇게 만들어집니다. 싸고 빠르게 만들 수 있어 대량 생산에 알맞지만, 금형을 만드는 값이 비싸서 조금만 만들 때는 맞지 않습니다. (3단계) 3D 프린터는 재료를 아래에서부터 한 층씩 쌓아 올립니다. 필요한 만큼만 쓰고, 틀 없이 하나만 만들 수 있으며 복잡한 모양도 만들 수 있습니다. 대신 느리고 층 자국이 남으며, 층과 층 사이가 약해 강도가 떨어집니다. (4단계) 이렇게 층을 쌓아 만드는 방식을 적층 제조라고 하고, 3D 프린터는 적층 제조 기계입니다. 발문: '학교에서 학생마다 다른 모양을 하나씩 만든다면 어느 방법이 맞을까?'">
+  <div class="crumb">1. 3D프린터 › <b>1. 작동원리</b> · 만드는 방법</div>
+  <div class="abs h2" style="left:120px;top:136px">같은 꽃병을 만드는 <span class="hl-action">세 가지 방법</span></div>
+
+  <!-- 깎아내기 -->
+  <div class="card s03-c" data-s="1" style="left:120px">
+    <span class="tag">깎아내기 · 절삭</span>
+    <svg class="abs s03-pic" viewBox="0 0 300 400">
+      <defs><clipPath id="s03-wclip"><path clip-rule="evenodd" d="M0 0H300V400H0ZM110 20L190 20L186 60C186 100 250 140 250 220C250 300 210 340 205 380L95 380C90 340 50 300 50 220C50 140 114 100 114 60Z"/></clipPath></defs>
+      <path d="M110 20L190 20L186 60C186 100 250 140 250 220C250 300 210 340 205 380L95 380C90 340 50 300 50 220C50 140 114 100 114 60Z" style="fill:var(--fil)"/>
+      <path class="s03-crack" d="M110 20L190 20L186 60C186 100 250 140 250 220C250 300 210 340 205 380L95 380C90 340 50 300 50 220C50 140 114 100 114 60Z" fill="none" stroke="#fff" stroke-width="3"/>
+      <g id="s03-chunks"></g>
+    </svg>
+    <div class="abs s03-txt"><b>재료를 덜어내요</b>덩어리에서 필요 없는 부분을 깎아 내요</div>
+    <div class="abs s03-pc"><span class="s03-pro">▲ 튼튼하고 매끈해요</span><span class="s03-pro">▲ 정밀하게 만들 수 있어요</span><span class="s03-con">▼ 부스러기가 많이 남아요</span><span class="s03-con">▼ 복잡한 모양은 어려워요</span></div>
+  </div>
+
+  <!-- 사출 -->
+  <div class="card s03-c" data-s="2" style="left:687px">
+    <span class="tag">틀에 붓기 · 사출</span>
+    <svg class="abs s03-pic" viewBox="0 0 300 400">
+      <defs><clipPath id="s03-mclip"><path d="M110 20L190 20L186 60C186 100 250 140 250 220C250 300 210 340 205 380L95 380C90 340 50 300 50 220C50 140 114 100 114 60Z"/></clipPath></defs>
+      <g clip-path="url(#s03-mclip)"><rect class="s03-melt" x="0" y="0" width="300" height="400" style="fill:var(--fil)"/></g>
+      <path fill-rule="evenodd" fill="#8e8e93" d="M0 0H136V20H110L114 60C114 100 50 140 50 220C50 300 90 340 95 380H205C210 340 250 300 250 220C250 140 186 100 186 60L190 20H164V0H300V400H0Z"/>
+      <path d="M150 380V400" stroke="#636366" stroke-width="4"/>
+      <path class="s03-pour" d="M150 -40V20" style="stroke:var(--fil)" stroke-width="20"/>
+    </svg>
+    <div class="abs s03-txt"><b>틀에 부어 굳혀요</b>녹인 플라스틱을 틀(금형)에 밀어 넣어요 · 대량 생산</div>
+    <div class="abs s03-pc"><span class="s03-pro">▲ 싸고 빠르게 만들어요</span><span class="s03-pro">▲ 많이 만들 때 알맞아요</span><span class="s03-con">▼ 금형 만드는 값이 비싸요</span><span class="s03-con">▼ 조금 만들 때는 안 맞아요</span></div>
+  </div>
+
+  <!-- 쌓아올리기 -->
+  <div class="card s03-c" data-s="3" style="left:1254px">
+    <span class="tag is-action">쌓아올리기 · 적층</span>
+    <svg class="abs s03-pic" viewBox="0 0 300 400">
+      <defs><clipPath id="s03-clip"><path d="M110 20L190 20L186 60C186 100 250 140 250 220C250 300 210 340 205 380L95 380C90 340 50 300 50 220C50 140 114 100 114 60Z"/></clipPath></defs>
+      <g clip-path="url(#s03-clip)" id="s03-bands"></g>
+    </svg>
+    <div class="abs s03-txt"><b>재료를 쌓아 올려요</b>필요한 만큼만 한 층씩 쌓아요</div>
+    <div class="abs s03-pc"><span class="s03-pro">▲ 하나만 만들기 좋아요</span><span class="s03-pro">▲ 복잡한 모양도 만들어요</span><span class="s03-con">▼ 느리고 층 자국이 남아요</span><span class="s03-con">▼ 강도가 약해요</span></div>
+  </div>
+
+  <div class="banner" data-s="4" style="left:120px;top:924px;width:1680px;height:100px">
+    3D 프린터 = <span style="margin:0 14px;color:#fff;opacity:.85">적층 제조</span>(Additive Manufacturing) 기계
+  </div>
+</section>
+<style>
+#s03_additive .s03-c{top:290px;width:545px;height:610px}
+#s03_additive .s03-pic{left:40px;top:110px;width:190px;height:253px}
+#s03_additive .s03-txt{left:254px;top:120px;width:256px;font-size:28px;line-height:1.45;color:var(--ink-2)}
+#s03_additive .s03-txt b{display:block;color:var(--ink);font-size:34px;margin-bottom:12px}
+#s03_additive .s03-pc{left:40px;top:388px;width:465px;font-size:30px;font-weight:600;line-height:1.35}
+#s03_additive .s03-pc span{display:block;margin-bottom:8px}
+#s03_additive .s03-pc .s03-con:nth-child(3){margin-top:18px}
+#s03_additive .s03-pro{color:var(--ok)}
+#s03_additive .s03-con{color:var(--heat)}
+/* 절삭: 꽃병과 같은 색 덩어리에 금이 가고, 바깥 조각이 부서져 떨어짐 */
+#s03_additive .s03-crack,#s03_additive .s03-chunk path{stroke-opacity:0;transition:stroke-opacity .3s .7s}
+#s03_additive.ge1 .s03-crack{stroke-opacity:.8}
+#s03_additive.ge1 .s03-chunk path{stroke-opacity:.8}
+#s03_additive .s03-chunk{transform-box:fill-box;transform-origin:center;
+  transition:transform .9s cubic-bezier(.5,0,.9,.6) var(--dl),opacity .4s ease-in calc(var(--dl) + .5s)}
+#s03_additive.ge1 .s03-chunk{transform:translate(var(--dx),260px) rotate(var(--r));opacity:0}
+/* 사출: 틀 안이 아래부터 차오름 */
+#s03_additive .s03-melt{transform-box:fill-box;transform-origin:50% 100%;transform:scaleY(0);transition:transform 1.4s ease-in-out .8s}
+#s03_additive.ge2 .s03-melt{transform:scaleY(1)}
+#s03_additive .s03-pour{opacity:0;transition:opacity .3s .6s}
+#s03_additive.ge2 .s03-pour{opacity:1}
+/* 적층: 한 층씩 쌓임 */
+#s03_additive .band{opacity:0;transform:translateY(-26px);transition:opacity .4s ease-out,transform .5s var(--ease-out);
+  transition-delay:calc(var(--i) * 110ms + 350ms)}
+#s03_additive.ge3 .band{opacity:1;transform:none}
+</style>
+<script>
+Deck.scene('s03_additive', {
+  build(root) {
+    /* 절삭 조각: 흔들린 격자로 덩어리를 나누고, 꽃병 바깥만 남도록 잘라 낸다 */
+    const C = 5, R = 6, rnd = (i, j, k) => { const v = Math.sin(i * 12.9898 + j * 78.233 + k * 37.719) * 43758.5453; return v - Math.floor(v); };
+    const P = (i, j) => [i * 300 / C + (i % C ? (rnd(i, j, 1) - .5) * 34 : 0), j * 400 / R + (j % R ? (rnd(i, j, 2) - .5) * 34 : 0)];
+    let ch = '';
+    for (let j = 0; j < R; j++) for (let i = 0; i < C; i++) {
+      const q = [P(i, j), P(i + 1, j), P(i + 1, j + 1), P(i, j + 1)].map(p => p[0].toFixed(1) + ' ' + p[1].toFixed(1));
+      const dl = (.9 + (R - 1 - j) * .07 + rnd(i, j, 3) * .35).toFixed(2), dx = ((i - (C - 1) / 2) * 22 + (rnd(i, j, 4) - .5) * 30).toFixed(0), rot = ((rnd(i, j, 5) - .5) * 120).toFixed(0);
+      ch += `<g class="s03-chunk" style="--dl:${dl}s;--dx:${dx}px;--r:${rot}deg"><path clip-path="url(#s03-wclip)" d="M${q.join('L')}Z" style="fill:var(--fil)" stroke="#fff" stroke-width="3" stroke-linejoin="round"/></g>`;
+    }
+    root.querySelector('#s03-chunks').innerHTML = ch;
+    const B = 20, hh = 400 / B;
+    root.querySelector('#s03-bands').innerHTML = Array.from({ length: B }, (_, i) =>
+      `<rect class="band" style="--i:${i};fill:var(--fil);stroke:#fff;stroke-opacity:.55;stroke-width:1.5" x="0" y="${400 - (i + 1) * hh}" width="300" height="${hh}"/>`).join('');
+  }
+});
+</script>
+
+<section class="slide" id="s04_fff" data-tile="dark" data-title="FFF 방식과 필라멘트"
+  data-notes="(1단계) 가장 흔한 3D 프린터가 쓰는 방식이 FFF, 우리말로 '융합 필라멘트 제작'입니다. 재료는 필라멘트라는 플라스틱 실이에요. 스풀에 감겨 있고 굵기는 보통 1.75mm. 모터 기어가 이 실을 노즐 쪽으로 밀어 넣습니다. (2단계) 핫엔드가 약 200도로 달궈서 필라멘트를 녹입니다. (3단계) 녹은 플라스틱이 노즐 끝으로 가늘게 나오고, 출력판이 움직이면서 선을 그려요. 한 층이 끝나면 출력판이 한 층 두께만큼 내려가고 다음 층을 쌓습니다. 식으면 굳습니다. (4단계) 필라멘트 종류는 PLA, ABS, PETG, TPU. 학교에서는 냄새가 적고 쉬운 PLA를 가장 많이 씁니다. 발문: '왜 식으면 굳는 재료여야 할까?'">
+  <div class="crumb">1. 3D프린터 › <b>1. 작동원리</b> · 가장 흔한 방식</div>
+  <div class="abs h2" style="left:100px;top:122px"><span class="hl">FFF</span> 방식 — 녹인 플라스틱 실을 쌓는다</div>
+
+  <svg class="fullsvg" viewBox="0 0 1920 1080">
+    <!-- 필라멘트 길(스풀 → 압출기) -->
+    <path class="feed" d="M230 306C230 240 692 210 692 236" fill="none" style="stroke:var(--fil)" stroke-width="8" stroke-linecap="round"/>
+    <circle class="ring" cx="230" cy="420" r="134" fill="none" style="stroke:var(--fil)" stroke-width="5" stroke-dasharray="14 12"/>
+    <g id="s04-spool"></g>
+    <!-- 압출기(모터 기어) -->
+    <rect x="636" y="236" width="112" height="92" rx="14" fill="#3a3a3c"/>
+    <circle class="gear" cx="668" cy="282" r="22" fill="#6e6e73" stroke="#a1a1a6" stroke-width="6" stroke-dasharray="7 7"/>
+    <circle class="gear r" cx="716" cy="282" r="22" fill="#6e6e73" stroke="#a1a1a6" stroke-width="6" stroke-dasharray="7 7"/>
+    <g id="s04-hot"></g>
+    <circle id="s04-tip" cx="692" cy="544" r="34" fill="url(#s04-glow)" style="opacity:0"/>
+    <defs><radialGradient id="s04-glow"><stop offset="0" stop-color="#FF6A3D" stop-opacity=".9"/><stop offset="1" stop-color="#FF6A3D" stop-opacity="0"/></radialGradient></defs>
+    <g id="s04-bed"></g>
+
+    <!-- 이름표 -->
+    <g data-s="1"><text class="svg-label" x="230" y="600" text-anchor="middle">필라멘트 스풀</text>
+      <path class="leader" d="M748 282H800"/><text class="svg-label" x="812" y="292">압출기(모터 기어)</text></g>
+    <g data-s="2"><path class="leader" d="M752 432H800"/><text class="svg-label" x="812" y="442" style="fill:var(--heat)">핫엔드 · 약 200 °C</text>
+      <path class="leader" d="M712 520L800 496"/><text class="svg-label" x="812" y="506">노즐</text></g>
+    <g data-s="3"><text class="svg-note" x="692" y="826" text-anchor="middle">출력판이 한 층씩 내려가요</text></g>
+  </svg>
+
+  <!-- 오른쪽 설명 카드 -->
+  <div class="card" data-s="1" style="left:1180px;top:256px;width:640px;height:172px;padding:26px 32px">
+    <div style="display:flex;gap:22px;align-items:flex-start"><span class="num">1</span>
+    <div><div class="h3" style="font-size:38px">필라멘트 공급</div><div class="small" style="color:var(--on-dark-2)">플라스틱 실(지름 1.75 mm)을 모터가 노즐로 밀어 넣어요.</div></div></div></div>
+  <div class="card" data-s="2" style="left:1180px;top:448px;width:640px;height:172px;padding:26px 32px">
+    <div style="display:flex;gap:22px;align-items:flex-start"><span class="num">2</span>
+    <div><div class="h3" style="font-size:38px">가열</div><div class="small" style="color:var(--on-dark-2)">핫엔드가 <span class="hl-heat">약 200 °C</span>로 달궈 필라멘트를 녹여요.</div></div></div></div>
+  <div class="card" data-s="3" style="left:1180px;top:640px;width:640px;height:172px;padding:26px 32px">
+    <div style="display:flex;gap:22px;align-items:flex-start"><span class="num">3</span>
+    <div><div class="h3" style="font-size:38px">적층</div><div class="small" style="color:var(--on-dark-2)">녹은 선을 그려 한 층을 만들고, 식으면 굳어요.</div></div></div></div>
+
+  <!-- 필라멘트 종류 -->
+  <div class="card" data-s="4" style="left:100px;top:846px;width:410px;height:172px;padding:20px 30px">
+    <div class="h3" style="color:var(--fil)">PLA</div><div class="small" style="color:var(--on-dark-2)">옥수수 전분 등 식물 원료<br>190–220 °C · 가장 쉬워요</div></div>
+  <div class="card" data-s="4" style="left:536px;top:846px;width:410px;height:172px;padding:20px 30px;transition-delay:.12s">
+    <div class="h3" style="color:var(--fil)">ABS</div><div class="small" style="color:var(--on-dark-2)">튼튼하고 열에 강해요<br>230–260 °C · 냄새 주의</div></div>
+  <div class="card" data-s="4" style="left:972px;top:846px;width:410px;height:172px;padding:20px 30px;transition-delay:.24s">
+    <div class="h3" style="color:var(--fil)">PETG</div><div class="small" style="color:var(--on-dark-2)">투명하고 질겨요<br>220–250 °C · 균형형</div></div>
+  <div class="card" data-s="4" style="left:1408px;top:846px;width:412px;height:172px;padding:20px 30px;transition-delay:.36s">
+    <div class="h3" style="color:var(--fil)">TPU</div><div class="small" style="color:var(--on-dark-2)">고무처럼 말랑해요<br>210–230 °C · 휘는 부품</div></div>
+</section>
+<style>
+#s04_fff .ring{opacity:0;transition:opacity .6s}
+#s04_fff.ge1 .ring{opacity:.9}
+#s04_fff.ge2 .ring{opacity:0}
+#s04_fff.ge2 .p-heater{--heater:var(--heat);filter:drop-shadow(0 0 18px var(--heat))}
+#s04_fff .gear{transform-box:fill-box;transform-origin:center}
+#s04_fff.ge3 .gear{animation:s04-spin 1.4s linear infinite}
+#s04_fff.ge3 .gear.r{animation-direction:reverse}
+#s04_fff.ge3 .p-spool{animation:s04-spin 6s linear infinite reverse}
+#s04_fff.ge3 .feed{stroke-dasharray:22 14;animation:s04-feed .5s linear infinite}
+@keyframes s04-spin{to{transform:rotate(360deg)}}
+@keyframes s04-feed{to{stroke-dashoffset:-36}}
+/* 4단계: 종류 카드가 올라오면 설명 카드는 한 발 물러남 */
+#s04_fff [data-s="1"].card,#s04_fff [data-s="2"].card,#s04_fff [data-s="3"].card{transition:opacity .6s var(--ease-out),transform .7s var(--ease-out)}
+#s04_fff.ge4 .card[data-s="3"],#s04_fff.ge4 .card[data-s="2"],#s04_fff.ge4 .card[data-s="1"]{opacity:.35}
+</style>
+<script>
+(function () {
+  const N = 14, H = 14, TIPX = 692, TIPY = 544;
+  const wAt = j => 90 + 80 * Math.sin(Math.PI * (0.08 + 0.86 * j / (N - 1)));
+  const cfg = c => ({
+    bed: c.$('#s04-bed'), layers: c.$$('#s04-bed .layer'), tipX: TIPX, tipY: TIPY, h: H, wAt,
+    per: 520, hold: 2400, glow: c.$('#s04-tip')
+  });
+  Deck.scene('s04_fff', {
+    build(root) {
+      root.querySelector('#s04-spool').innerHTML = OBJ.place('spool', { id: 's04-sp', x: 110, y: 300, s: 1.2 });
+      root.querySelector('#s04-hot').innerHTML = OBJ.place('hotend', { id: 's04-h', x: 620, y: 340, s: 1.2, fil: 70 });
+      const layers = Array.from({ length: N }, (_, j) =>
+        `<rect class="layer" x="0" y="${-(j + 1) * H}" width="0" height="${H}" style="fill:var(--fil);stroke:#000;stroke-opacity:.35;stroke-width:1.5"/>`).join('');
+      const bed = root.querySelector('#s04-bed');
+      bed.innerHTML = OBJ.place('bed', { id: 's04-b' }) + layers;
+      FX.printReset({ bed, layers: [...bed.querySelectorAll('.layer')], tipX: TIPX, tipY: TIPY });
+    },
+    go(k, c) {
+      if (k >= 3 && !c.state.stop) c.state.stop = FX.printLoop(c, cfg(c));
+      if (k < 3 && c.state.stop) { c.state.stop(); c.state.stop = null; }
+    }
+  });
+})();
+</script>
+
+<section class="slide" id="c_sites" data-tile="parchment" data-title="유용한 사이트 모음"
+  data-notes="3D프린터와 관련해 더 알아볼 수 있는 사이트입니다. (사이트는 준비 중)">
+  <div class="crumb">1. 3D프린터 › <b>2. 유용한 사이트 모음</b></div>
+  <div class="abs h2" style="left:100px;top:122px">유용한 사이트 모음</div>
+  <!-- 빈 버튼: 사이트가 정해지면 class="empty"·aria-disabled 를 빼고 href·target="_blank" 를 넣는다 -->
+  <div class="sites">
+    <a class="empty" aria-disabled="true"><span class="i"></span><span>사이트 1<small>준비 중</small></span></a>
+    <a class="empty" aria-disabled="true"><span class="i"></span><span>사이트 2<small>준비 중</small></span></a>
+    <a class="empty" aria-disabled="true"><span class="i"></span><span>사이트 3<small>준비 중</small></span></a>
+    <a class="empty" aria-disabled="true"><span class="i"></span><span>사이트 4<small>준비 중</small></span></a>
+    <a class="empty" aria-disabled="true"><span class="i"></span><span>사이트 5<small>준비 중</small></span></a>
+    <a class="empty" aria-disabled="true"><span class="i"></span><span>사이트 6<small>준비 중</small></span></a>
+  </div>
+</section>
+
+<section class="slide" id="c_res" data-tile="light" data-title="연수자료"
+  data-notes="오늘 연수에서 직접 만들어 볼 자료입니다.">
+  <div class="crumb">1. 3D프린터 › <b>3. 연수자료</b></div>
+  <div class="abs h2" style="left:100px;top:122px">연수자료</div>
+  <div class="res" style="left:120px;top:300px;width:1680px">
+    <div class="txt"><div class="h3">키캡 만들기</div><p>칸에 글씨만 넣으면 키캡 뚜껑 3D 파일(STL)이 나와요.<br>받은 파일을 큐비크리에이터로 불러와 출력해요.</p>
+      <a class="go-btn" href="../keycap/">키캡 만들기 →</a></div>
+    <div class="qrbox"><div data-qr="https://maker-ssam.github.io/2026jjbs/keycap/" data-size="280"></div></div>
+  </div>
+</section>
+
+<section class="slide" id="c_manual" data-tile="dark" data-title="기기작동 매뉴얼"
+  data-notes="기기작동 매뉴얼은 슬라이드가 아니라 아래로 내려 보는 한 페이지입니다. QR을 찍어 각자 휴대폰으로 보면서 기기 앞에서 따라 하세요.">
+  <div class="crumb">1. 3D프린터 › <b>4. 기기작동 매뉴얼</b></div>
+  <div class="abs h2" style="left:100px;top:122px">기기작동 매뉴얼</div>
+  <div class="res" style="left:120px;top:300px;width:1680px;height:620px">
+    <div class="txt"><div class="h3">휴대폰으로 보며 따라 해요</div>
+      <p>QR을 찍으면 한 페이지 매뉴얼이 열려요.<br>켜기부터 출력·꺼내기까지 10단계 · 필라멘트 바꾸기 · 문제 해결</p>
+      <a class="go-btn" href="manual.html">매뉴얼 열기 →</a>
+      <p class="url" style="margin-top:28px">maker-ssam.github.io/2026jjbs/3d/manual.html</p></div>
+    <div class="qrbox"><div data-qr="https://maker-ssam.github.io/2026jjbs/3d/manual.html" data-size="460"></div></div>
+  </div>
+</section>
+
+  </div>
+</div>
+<script src="../assets/deck/jjbs.js"></script>
+<script>JJ.start();</script>
+<!-- 방문 집계: Cloudflare Web Analytics(쿠키 없음). 실제 주소에서만 불러와 로컬 미리보기는 세지 않는다 -->
+<script>if(location.hostname==='maker-ssam.github.io'){var s=document.createElement('script');s.defer=true;s.src='https://static.cloudflareinsights.com/beacon.min.js';s.setAttribute('data-cf-beacon','{"token": "50978c2fd5224087936fd5e326e45675"}');document.body.appendChild(s);}</script>
+</body>
+</html>
