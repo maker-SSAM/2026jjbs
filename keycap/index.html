@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <!-- 2026jjbs 사본: easy3D festival01(키캡 뚜껑, 양각·흰 뚜껑+검정 글씨 3MF)을 가져와 교사연수용으로 고침.
-         제출(Firebase) 대신 파일을 바로 받고, 칸은 3구(3×1)로 늘렸다. -->
+         칸은 3구(3×1), 제출은 이름·소속(학년반)으로 easy3D와 같은 Firebase Storage의 2026jjbs/ 폴더에 받는다. -->
     <!-- 모바일에서 실제 기기 폭 기준으로 레이아웃을 잡게 한다(index.html과 동일한 이유). -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- 다크모드 첫 페인트 전 적용(깜빡임 방지) — assets/js/theme-core.js의 로직과 동일하되,
@@ -13,7 +13,7 @@
     <script>document.documentElement.setAttribute('data-theme','light');document.documentElement.setAttribute('data-lang','ko');</script>
     <title>전주교대 부설초등학교 교사연수 - 키캡 뚜껑</title>
     <link rel="stylesheet" href="../assets/css/core.css">
-    <!-- 행사장 모바일 페이지(교크협 전북지회 패스)와 톤을 맞춘 행사 전용 디자인 + 그 페이지와 같은 글씨체 -->
+    <!-- 연수 슬라이드(assets/deck)와 톤을 맞춘 디자인 + 슬라이드와 같은 글씨체 -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
     <link rel="stylesheet" href="../assets/css/festival.css">
     <script src="https://cdn.jsdelivr.net/npm/three@0.146.0/build/three.min.js"></script>
@@ -37,13 +37,11 @@
          type="module"로 만들어서 ManifoldCore.ready를 안전하게 await할 수 있게 했다. -->
     <script type="module" src="../assets/js/manifold-core.js"></script>
     <style>
-        /* 연수용: 기기 슬라이드로 돌아가는 버튼을 남겨 두어서, 좁은 머리줄에서 글자가 접히지 않게 한다 */
-        .home-link { white-space: nowrap; }
         .color-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
         .color-row span { font-size: 0.9em; color: var(--text-color); }
         .color-row input[type="color"] { width: 44px; height: 30px; padding: 0; border: 1px solid var(--input-border); border-radius: 4px; cursor: pointer; }
-        /* 3×1 입력칸 — 한 칸 크기는 festival01(2×1, 기존 86px의 150%)과 같게 두고 칸만 하나 늘린다. */
-        .cap-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; width: 197px; margin: 0 auto 8px; }
+        /* 3×1 입력칸 — PC 왼쪽 칸(약 320px)의 카드 안쪽 폭에 세 칸이 꽉 차게 둔다. */
+        .cap-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; width: 228px; margin: 0 auto 8px; }
         .cap-grid input {
             aspect-ratio: 1; width: 100%; box-sizing: border-box; padding: 0;
             border: 2px solid var(--input-border); border-radius: 4px; text-align: center; font-size: 1.3em;
@@ -56,11 +54,43 @@
         @media (max-width: 480px) {
             #viewer { height: 90vw; }
         }
+        /* "디자인 완성하고 보내기"를 누르면 뜨는 두 번째 화면(이름·소속 입력). 편집 화면의
+           모델 상태를 그대로 써야 해서 별도 페이지로 이동하지 않고 화면 전체를 덮는 창으로 띄운다.
+           색·모양은 festival.css에 있다. */
+        #submitScreen {
+            position: fixed; inset: 0; z-index: 1000; display: none;
+            align-items: center; justify-content: center; padding: 16px;
+        }
+        #submitScreen.open { display: flex; }
+        #submitScreen .submit-card { width: 100%; max-width: 360px; box-sizing: border-box; color: var(--text-color); }
+        #submitScreen p { margin: 0 0 20px; }
+        #submitScreen label { display: block; margin: 0 0 6px; }
+        #submitScreen input { width: 100%; box-sizing: border-box; margin: 0 0 16px; }
+        #submitScreen .submit-error { min-height: 1.2em; margin: -8px 0 12px; font-size: 0.85em; }
+        #submitScreen .submit-actions { display: flex; }
+        #submitScreen .submit-actions button { flex: 1; padding: 12px; cursor: pointer; }
+        #submitScreen .submit-send { border: none; color: #fff; }
     </style>
 </head>
 <body>
 
     <script type="module">
+
+        // 제출 파일은 easy3D와 같은 Firebase Storage의 2026jjbs/ 폴더에 받는다(행사용 festival01/과 나눔).
+        // 쓰기 규칙은 easy3D 저장소의 storage.rules에 있다(쓰기만 허용, 읽기/목록 차단 — 선생님은 콘솔에서 확인).
+        // 아래 설정값은 웹 페이지에 넣도록 되어 있는 공개용 값이다.
+        const SUBMIT_FOLDER = '2026jjbs';
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js';
+        import { getStorage, ref as storageRef, uploadBytes } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-storage.js';
+        const firebaseApp = initializeApp({
+            apiKey: 'AIzaSyDbuBkIyf7GxFNyMTz1ATXpGODs-E8jqo8',
+            authDomain: 'easy3d-ef224.firebaseapp.com',
+            projectId: 'easy3d-ef224',
+            storageBucket: 'easy3d-ef224.firebasestorage.app',
+            messagingSenderId: '501388594432',
+            appId: '1:501388594432:web:4edde9c928af9af3c5f7e5'
+        });
+        const submitStorage = getStorage(firebaseApp);
 
         // 갤러리8: 클리커 뚜껑을 4x4 격자 위에 배치한다. 갤러리7(몸체)과 같은 칸 간격
         // (GRID_PITCH)을 써서 몸체 칸과 같은 자리에 놓이게 맞추되, 뚜껑은 몸체와 달리
@@ -89,7 +119,7 @@
         // 행사용 독립 페이지: 메인 사이트로 나가는 홈 버튼은 없애고 초기화 버튼만 남긴다.
         const homeLinkEl = document.querySelector('.home-link');
         if (homeLinkEl) { homeLinkEl.href = '../3d/'; homeLinkEl.textContent = '← 3D프린터 슬라이드'; homeLinkEl.removeAttribute('data-i18n-en'); }
-        // 그 자리(머리줄 왼쪽)에는 행사장 페이지처럼 ★ 로고와 이름을 둔다.
+        // 그 자리(머리줄 왼쪽)에는 슬라이드 기기 표지처럼 기기 색 동그라미 로고와 이름을 둔다.
         shell.controlsHeaderEl.insertAdjacentHTML('afterbegin',
             '<div class="fest-brand"><span class="fest-brand-mark">★</span>무한상상실</div>');
 
@@ -122,7 +152,7 @@
         shell.controlsBodyEl.innerHTML = `
             <h3>전주교대 부설초등학교 교사연수</h3>
             <p class="fest-lead">
-                무한상상실 3D프린터 연수입니다. 글씨를 넣어 나만의 키캡 뚜껑을 만들고, 받은 3MF 파일을 큐비크리에이터에서 슬라이싱해 보세요!
+                무한상상실 3D프린터 연수입니다. 칸에 글씨를 넣어 나만의 키캡 뚜껑을 디자인하고 보내 주세요. 두 색(흰 뚜껑+검정 글씨)으로 출력해 드려요!
             </p>
             <section class="fest-card">
                 <label class="fest-card-title" data-i18n-en="Text (3×1)">글씨 (3×1)</label>
@@ -145,17 +175,48 @@
         `;
 
         ParametricCore.enhanceRangeInputs(shell.controlsBodyEl);
-        // 연수용: 오른쪽 출처 패널을 지웠으므로, 원작자에게 약속한 출처를 안내 문구 아래에 남긴다.
-        shell.controlsBodyEl.querySelector('.fest-lead').insertAdjacentHTML('afterend',
-            '<p class="fest-hint" style="margin-top:-6px">뚜껑 원작: <a href="https://makerworld.com/ko/models/2854834-customizable-name-word-clicker-keychain#profileId-3184880" target="_blank" rel="noopener">kongkoka (MakerWorld)</a> · 원작자 허가를 받아 비상업적으로 사용</p>');
-
-        // 연수용: 제출(Firebase) 없이 3MF를 바로 내려받는다 — 각자 큐비크리에이터에서 슬라이싱한다.
+        // STL/3MF 형식 선택 없이 3MF 하나로만 보낸다(흰 뚜껑+검정 글씨 두 색이라 색 정보가 남는
+        // 3MF). 공용 다운로드 패널 대신 버튼 하나만 두고, 누르면 이름·소속을 적는 두 번째
+        // 화면(#submitScreen)을 띄운다.
         const finishBtn = document.createElement('button');
         finishBtn.type = 'button';
         finishBtn.className = 'download-btn';
-        finishBtn.textContent = '디자인 완성하고 3MF 받기';
-        finishBtn.addEventListener('click', function () { downloadDesign(); });
+        finishBtn.textContent = '디자인 완성하고 보내기';
+        finishBtn.addEventListener('click', function () { openSubmitScreen(); });
         shell.controlsFooterEl.appendChild(finishBtn);
+
+        const submitScreen = document.createElement('div');
+        submitScreen.id = 'submitScreen';
+        submitScreen.innerHTML = `
+            <div class="submit-card" id="submitForm">
+                <h3>디자인 보내기</h3>
+                <p>이름과 소속(학년반)을 적어주세요.</p>
+                <label for="submitName">이름</label>
+                <input id="submitName" type="text" autocomplete="name" maxlength="20">
+                <label for="submitAffiliation">소속(학년반)</label>
+                <input id="submitAffiliation" type="text" placeholder="예: 3학년 2반" maxlength="30">
+                <div class="submit-error" id="submitError"></div>
+                <div class="submit-actions">
+                    <button type="button" class="submit-back" id="submitBack">← 디자인으로</button>
+                    <button type="button" class="submit-send" id="submitSend">보내기</button>
+                </div>
+            </div>
+            <div class="submit-card" id="submitDone" style="display:none; text-align:center;">
+                <h3>✅ 디자인을 보냈어요!</h3>
+                <p id="submitDoneText"></p>
+                <div class="submit-actions">
+                    <button type="button" class="submit-back" id="submitDoneClose">처음 화면으로</button>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(submitScreen);
+        document.getElementById('submitBack').addEventListener('click', function () {
+            submitScreen.classList.remove('open');
+        });
+        document.getElementById('submitSend').addEventListener('click', submitDesign);
+        document.getElementById('submitDoneClose').addEventListener('click', function () {
+            submitScreen.classList.remove('open');
+        });
         if (window.LangCore) window.LangCore.applyTranslations(document);
 
         // 3×1 격자만 담으면 되므로 공용 기본입체 시점(ISO)과 같은 방향에서, 폰 화면에서
@@ -450,18 +511,54 @@
             ParametricCore.updateDimensionOverlay(scene, currentGroup);
         }
 
-        // 파일 이름은 칸에 적은 글씨로 만든다(파일 이름에 못 쓰는 문자는 뺀다).
-        function downloadDesign() {
+        function openSubmitScreen() {
             if (!manifoldReady || !capTemplate) return;
-            const words = Array.prototype.map.call(capInputs(), function (input) { return input.value.trim(); }).filter(Boolean);
-            if (!words.length) {
+            const hasCap = Array.prototype.some.call(capInputs(), function (input) { return input.value.trim(); });
+            if (!hasCap) {
                 alert('뚜껑 칸에 글씨를 먼저 적어주세요.');
                 return;
             }
+            document.getElementById('submitError').textContent = '';
+            document.getElementById('submitForm').style.display = '';
+            document.getElementById('submitDone').style.display = 'none';
+            submitScreen.classList.add('open');
+            document.getElementById('submitName').focus();
+        }
+
+        // 최종 파일 이름은 "이름(소속).3MF" — 파일 이름만 보고 누구 디자인인지 알 수 있게 한다.
+        // 이름·소속에서는 파일 이름에 쓸 수 없는 문자(\ / : * ? " < > | 괄호)를 지운다.
+        // 이름과 소속이 같으면 같은 파일로 덮어쓴다(마지막으로 보낸 디자인이 남음). 올리기에
+        // 실패했을 때만 이 기기에도 같은 파일을 내려받아, 대신 전해 줄 수 있게 한다.
+        function cleanForFilename(value) { return value.replace(/[\\/:*?"<>|()]/g, '').trim(); }
+
+        async function submitDesign() {
+            const errorEl = document.getElementById('submitError');
+            const sendBtn = document.getElementById('submitSend');
+            const name = cleanForFilename(document.getElementById('submitName').value);
+            const affiliation = cleanForFilename(document.getElementById('submitAffiliation').value);
+            if (!name) { errorEl.textContent = '이름을 적어주세요.'; return; }
+            if (!affiliation) { errorEl.textContent = '소속(학년반)을 적어주세요.'; return; }
             const blob = build3MFBlob();
             if (!blob) return;
-            const name = words.join('').replace(/[\\/:*?"<>|()\s]/g, '') || '키캡';
-            saveBlob(blob, '키캡-' + name + '.3mf');
+            const filename = name + '(' + affiliation + ').3MF';
+
+            errorEl.textContent = '';
+            sendBtn.disabled = true;
+            sendBtn.textContent = '보내는 중...';
+            try {
+                await uploadBytes(storageRef(submitStorage, SUBMIT_FOLDER + '/' + filename), blob, { contentType: 'model/3mf' });
+                document.getElementById('submitDoneText').textContent =
+                    affiliation + ' ' + name + '님의 디자인이 잘 도착했어요. 출력해서 전해 드릴게요.';
+                document.getElementById('submitForm').style.display = 'none';
+                document.getElementById('submitDone').style.display = '';
+            } catch (err) {
+                console.error('업로드 실패:', err);
+                saveBlob(blob, filename);
+                errorEl.textContent = '보내기에 실패했어요. 인터넷 연결을 확인하고 다시 눌러주세요. (파일은 이 기기에 저장했어요)';
+            } finally {
+                sendBtn.disabled = false;
+                sendBtn.textContent = '보내기';
+            }
         }
 
         // 뚜껑색(흰색)·글자색(검정)이 부품별로 입혀진 메시를 3MF로 만든다. Z-up 회전은
