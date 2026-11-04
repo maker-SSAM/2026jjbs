@@ -150,6 +150,8 @@ html.festival .download-btn {
 html.festival .download-btn::after { content: "→"; margin-left: 0.3em; }
 html.festival .download-btn:hover { background: var(--jj-action-hover); }
 html.festival .download-btn:active { transform: translateY(1px); }
+html.festival .download-btn:disabled, html.festival .download-btn:disabled:hover { background: #E4E1DA; color: #5C5850; cursor: default; box-shadow: none; transform: none; }
+html.festival .download-btn:disabled::after { content: none; }
 
 /* ---------- 이름·소속 입력 화면 ---------- */
 html.festival #submitScreen { background: var(--jj-bg); }
