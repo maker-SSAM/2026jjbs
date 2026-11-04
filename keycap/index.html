@@ -554,6 +554,8 @@
                 document.getElementById('submitDone').style.display = '';
             } catch (err) {
                 console.error('업로드 실패:', err);
+                // storage.rules로 받기를 닫은 동안에는 이 안내만 보여 준다(파일 저장 없음). 다시 열면 10MB 초과 때만 나온다.
+                if (err.code === 'storage/unauthorized') { errorEl.textContent = '제출기간이 아닙니다.'; return; }
                 saveBlob(blob, filename);
                 errorEl.textContent = '보내기에 실패했어요. 인터넷 연결을 확인하고 다시 눌러주세요. (파일은 이 기기에 저장했어요)';
             } finally {
